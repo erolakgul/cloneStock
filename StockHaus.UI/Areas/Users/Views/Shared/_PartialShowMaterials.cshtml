@@ -1,0 +1,368 @@
+﻿
+
+<div id="loadWaiting" class="loader">
+    <img src="/Img/haus.png" style="width:75%;margin-top:33px;margin-left:13px;" />
+</div>
+
+<div class="row" id="userContentRow">
+    <div id="searchingSection" class="col-lg-12">
+
+        <div id="dropdownlist" class="col-lg-4 col-xs-12">
+            @*_partialdropdownlist*@
+        </div>
+
+        <div id="includeWare" class="col-lg-2 col-lg-offset-1 col-xs-12" style="border-right:2px solid #808080;">
+            <div class="checkbox">
+                <label><input type="checkbox" id="Include" value=""> Depo - Stok Yeri Dahil ?</label>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-lg-offset-2 col-xs-12">
+            <input id="investigate" type="text" name="search" placeholder="en az 4 karakter.." onkeypress="handle(event)">
+        </div>
+
+    </div>
+</div>
+
+
+<div id="ListSearchedMaterialDiv">
+    @Html.Partial("_PartialSerachedMaterials")
+</div>
+
+
+<!-- Modal -->
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div id="gncl" class="modal-header">
+                <button id="close" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Ekle/Düzenle</h4>
+            </div>
+            <div class="modal-body">
+                @*<form>*@
+                <span id="InventId" style="color:red;font-weight:bold;text-align:center;float:right;"></span>
+                <span id="warningIndis" style="background-color:red;text-align:center"><i class="fa fa-warning">İndisi Farklı Girildi</i></span>
+                <span id="clsIndis" style="display:none;"></span>
+                <span id="mttype" style="display:none;"></span>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <label for="indisData">İndis</label>
+                                <input type="text" name="name" id="indisData" value="" class="form-control">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="specData">Özel Stok</label>
+                                <select id="specData" class="form-control">
+                                    <option value="*">*</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <label for="serialNumData">Seri No</label>
+                                <input type="text" name="text" id="serialNumData" value="" class="form-control">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="adetData">Adet</label>
+                                <input type="text" min="1" name="text" id="adetData" value="" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" name="text" id="dbIdNumber" value="" class="form-control" style="float:right;display:none;">
+                    <input type="text" name="text" id="mCode" value="" class="form-control" style="float:right;display:none;">
+                    <input type="text" name="text" id="store" value="" class="form-control" style="float:right;display:none;">
+                    <input type="text" name="text" id="stockPlace" value="" class="form-control" style="float:right;display:none;">
+                    <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                </fieldset>
+                @*</form>*@
+            </div>
+            <div class="modal-footer">
+                <button id="submitData" type="button" class="btn btn-default" onclick="SaveData()">Kaydet</button>
+                <button id="submitDataRef" type="button" class="btn btn-default" onclick="SaveData()">Referans Alarak Kaydet</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="Warningmessage" style="background-color:black;">
+    <table class="table table-bordered" style="margin-top:20px;color:white;background-color:black !important;overflow-y:auto;">
+        <thead>
+            <tr>
+                <th>Malzeme</th>
+                <th>İndis</th>
+                <th>Depo</th>
+                <th>Stok</th>
+                <th>Seri No</th>
+                <th>Özel Stok</th>
+            </tr>
+        </thead>
+        <tbody id="rsltMessagess">
+            @*<tr>
+                    <td>hello</td>
+                    <td>hello</td>
+                </tr>*@
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    function handle(e) {
+       // console.log("handle :" + e.keyCode);
+        if (e.keyCode === 13) {
+            e.preventDefault(); // Ensure it is only this code that rusn
+            GetMaterialCodeForInvestigate();
+        }
+    }
+
+    $('#myModal').modal({
+        backdrop: 'static'
+    });
+
+    $(document).ready(function () {
+
+        //var _kW = localStorage.getItem("XSearchCode");
+
+        //$("#investigate").val(_kW);
+
+        $('#myModal').modal('toggle');
+        // renk kaldırma
+        $("#close").click(function () {
+            var id = localStorage.getItem("last-color");
+            //console.log("dadasdasdasd" + id);
+            if ($("#InventId").text().length == 0) {
+                $('#showMaterialsForPer > tr.cls' + id).css("background-color", "#f5f5f5");
+            };
+        });
+
+        $("#Warningmessage").hide();
+
+        $("#warningIndis").hide();
+        $("#submitDataRef").hide();
+
+        $("#filterStockPlace").keyup(function () {
+            var materialCharID = '';
+
+            if ($("#filterStockPlace").val() != materialCharID) {
+                materialCharID = $("#filterStockPlace").val();
+
+                if (materialCharID.length >= 2) {
+                    localStorage.setItem("XFilterStockPlace", "");
+                    //$("#filterStockPlace").val("");
+                }
+            }
+        });
+
+        var _stokplace = localStorage.getItem("XFilterStockPlace");
+        $("#filterStockPlace").val(_stokplace);
+
+        $("#adetData").bind("keyup", function (e) {
+            //var value = String.fromCharCode(e.keyCode);
+            var _ar = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ','];
+            var count = 0;
+
+            var _gtI = localStorage.getItem("amountX");
+
+            for (var i = 0; i < _ar.length; i++) {
+                if (e.key == _ar[i]) {
+
+                    count = count + 1;
+                };
+            };
+
+            if (count == 0) {
+                //$("#adetData").val('');
+                console.log("cc :" + $(this).val() + "//:" + e.data + "//:" + e.keyCode + "//:" + e.key);
+
+                if (e.key != "Backspace" && e.key != "Shift" && e.key != "ArrowLeft" && e.key != "ArrowRight" && e.key != "Delete"
+                    && e.key != "Enter" && e.key != "CapsLock" && e.key != "Alt" && e.key != "End" && e.key != "Escape"
+                    && e.key != "Control" && e.key != "NumLock" && e.key != "AltGraph" && e.key != "NumLock"
+                     && e.key != "Home" && e.key != "PageDown" && e.key != "PageUp" && e.key != "Insert" && e.key != "PrintScreen"
+                    ) {
+                    $("#adetData").val($("#adetData").val().substr(0, $("#adetData").val().length - 1));
+                };
+            };
+
+        });
+
+        $("#serialNumData").blur(function () {
+            if ($("#serialNumData").val().length > 0) {
+                $("#adetData").val(1);
+                $("#adetData").attr("disabled", "disabled");
+            } else {
+                $("#adetData").removeAttr('disabled');
+            }
+        });
+
+    });
+
+    $("#closedPage").click(function () {
+        $("#Warningmessage").hide();
+    });
+
+    function waits() {
+        window.location.href = "/Users/Panel";
+    }
+
+    $(function () {
+        $("#Warningmessage").dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: true,
+            resizable: true,
+            position: ['center', 'top'],
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode", //explode fadein
+                duration: 1000
+            },
+            width: 600,
+            left: 600,
+            top: 200,
+            dialogClass: 'ui-dialog-osx'
+            //,
+            //buttons: {
+            //    "I've read and understand this": function () {
+            //        $(this).dialog("close");
+            //    }
+            //}
+        });
+
+        //$(".update").on("click", function () {
+        //    $("#dialog-message").dialog("open");
+        //});
+    });
+
+
+    function GetMaterialCodeForInvestigate() {
+        var materialCharID = '';
+        var id = '';
+        var email = $("#userNamed").text();//.split('.').join('ş');
+
+        var _stockPlace = $("#filterStockPlace").val();
+        console.log("dd :" + email);
+        //var inventoryCode = $("#showMaterialsForPer > tr > td:first").text();
+        //setInterval(function () {
+        if ($("#investigate").val() != materialCharID) {
+            materialCharID = $("#investigate").val();
+            // 4 karakter girildikten sonra sıralasın
+            //console.log("dd :" + materialCharID.length);
+            if (materialCharID.length >= 4 || materialCharID.length == 0) {
+                $("#loadWaiting").show();
+
+                id = materialCharID; //.toString() + "ş" + inventoryCode.toString();
+                //id = id.replace(/\./g, 'ç');
+                id = id + "ğ" + email;
+
+                // arama değeri cache lenir ve sayfa yenilendiğinde yapıştırılır arama çubuğuna
+                var cacheData = materialCharID;
+                localStorage.setItem("XSearchCode", cacheData);
+
+                if (materialCharID != null || materialCharID != "") {
+                    console.log("console :" + _stockPlace);
+
+                    if (_stockPlace != null && _stockPlace != "") {
+                        // o stok yerine göre arama yaptırılacak
+                        var _collectionFilter = {
+                            "id": id,
+                            "stockplace": _stockPlace
+                        };
+                        console.log("sss :" + id + "//" + _stockPlace);
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Users/Panel/FilteredSearchedShowMaterials/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "Html",
+                            cache: false,
+                            data: JSON.stringify(_collectionFilter),
+                            success: function (result) {
+                                $("#ListSearchedMaterialDiv").html(result);
+                                // $("#viewMaterialX").html(result);
+                                $("#loadWaiting").hide();
+                            },
+                            error: function (jqXHR, exception) {
+                                console.log(jqXHR);
+                            }
+                        });
+
+                    } else {
+                        var _depo = "";
+                        var _stok = "";
+
+                        var _data = "";
+
+                        if ($("#Include").prop('checked') == true) {
+                            _depo = $("#stockStoreSelect3 > select").find("option:selected").val();
+                            _stok = $("#stockPlaceSelect3 > select").find("option:selected").val();
+                            _data = "ğ" + _depo + "ç" + _stok;
+                        }
+
+                        if (_data != "") {
+                            id = id + _data
+                        }
+
+                        var _colllect = {
+                            "_ware": _depo,
+                            "_stock": _stok,
+                            "_matCode": materialCharID,
+                            "_mail": email
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Users/Panel/SearchedShowMaterialsUser/" + id,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "Html",
+                            cache: false,
+                            data: JSON.stringify(_colllect), //"{ id: '" + id + "'}",
+                            success: function (result) {
+                                $("#ListSearchedMaterialDiv").html(result);
+                                // $("#viewMaterialX").html(result);
+                                $("#loadWaiting").hide();
+                            },
+                            error: function (jqXHR, exception) {
+                                var msg = '';
+                                if (jqXHR.status === 0) {
+                                    msg = 'Not connect.\n Verify Network.';
+                                } else if (jqXHR.status == 404) {
+                                    msg = 'Requested page not found. [404]';
+                                } else if (jqXHR.status == 500) {
+                                    msg = 'Internal Server Error [500].';
+                                } else if (exception === 'parsererror') {
+                                    msg = 'Requested JSON parse failed.';
+                                } else if (exception === 'timeout') {
+                                    msg = 'Time out error.';
+                                } else if (exception === 'abort') {
+                                    msg = 'Ajax request aborted.';
+                                } else {
+                                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                                }
+                                if (msg == 'Internal Server Error [500].') {
+                                    swal("Data Bulunamadı!", "Değer giriniz!!", "warning");
+                                    $("#loadWaiting").hide();
+                                } else {
+                                    alert(msg);
+                                }
+                                console.log(jqXHR);
+                            }
+                        });
+                    }
+                }
+            };
+        }
+        //}, 1000);
+    };
+
+</script>

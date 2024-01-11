@@ -1,0 +1,111 @@
+﻿
+.field-validation-error {
+    color: red;
+}
+
+.ui-dialog {
+    top: 2% !important;
+    left: 55% !important;
+    overflow: scroll !important;
+    height: 500px !important;
+}
+
+.ui-dialog-titlebar-close {
+    /*content:"X";
+    color:black !important;*/
+    background-color: red;
+}
+
+#item-header {
+    width: 143px;
+    height: auto;
+    margin-left: 15px;
+    margin-top: -10px;
+}
+
+    #item-header > a > img {
+        max-width: 100%;
+        height: auto;
+    }
+
+
+/*medya*/
+
+@media (min-width: 992px) and (max-width: 1199px) {
+     #includeWare{
+         border-right:none !important;
+     }
+      #searchingSection {
+         border:none !important;
+     }
+      #userContentRow{
+         border:2px solid gray !important;
+     }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+     #includeWare{
+         border-right:none !important;
+     }
+      #searchingSection {
+         border:none !important;
+     }
+      #userContentRow{
+         border:2px solid gray !important;
+     }
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
+
+     #includeWare{
+         border-right:none !important;
+     }
+    #item-header {
+        width: 129px !important;
+        margin-top: -10px !important;
+    }
+     #searchingSection {
+         border:none !important;
+     }
+     #userContentRow{
+         border:2px solid gray !important;
+     }
+     nav#main{
+         height:auto !important;
+     }
+     #dtbs{
+         width:30%;
+         margin-left:0%;
+     }
+     #allMaterial > thead > tr > th:nth-child(4) {
+         width:20px !important;
+         line-break:auto !important;
+         word-break:break-all !important;
+     }
+}
+
+@media (max-width: 499px) {
+     #item-header {
+        width: 129px !important;
+        margin-top: -10px !important;
+    }
+     #main{
+         height:auto !important;
+     }
+     #userContent {
+         margin-top:0 !important;
+     }
+     #includeWare{
+         border-right:none !important;
+     }
+     #searchingSection {
+         border:none !important;
+     }
+     #userContentRow{
+         border:2px solid gray !important;
+     }
+      #dtbs{
+         width:3%;
+         margin-left:1%;
+     }
+}

@@ -1,0 +1,124 @@
+﻿@model IList<StockHaus.ModelClass.AdminPage.ShowPercent>
+
+@{
+    int count = 0;
+    double values = 0;
+    double valuesApproved = 0;
+
+    foreach (var item in Model)
+    {
+        count = count + 1;
+        values = item.InventPercent * 100;
+
+        if (values <= 1)
+        {
+            values = 1;
+        }
+
+
+        valuesApproved = item.ApprovedPercent * 100;
+
+        if (valuesApproved <= 1)
+        {
+            valuesApproved = 1;
+        }
+
+        <tr>
+            <td>@count</td>
+            <td>@item.WareHouse</td>
+            <td>@item.StockPlace</td>
+            <td>
+                <div id="myProgress_@count">
+                    <div id="myBar_@count">
+                        0%
+                    </div>
+                </div>
+                <span id="valuePercent_@count" style="display:none">@values</span>
+            </td>
+            <td>
+                <div id="myProgress2_@count">
+                    <div id="myBar2_@count">
+                        0%
+                    </div>
+                </div>
+                <span id="valuePercent2_@count" style="display:none">@valuesApproved</span>
+            </td>
+        </tr>
+        <script>
+    $(document).ready(function () {
+        move();
+        move2();
+    });
+    function move() {
+        var elem = document.getElementById("myBar_" + @count);
+        var value2 = $("#valuePercent_" + @count).text();
+        var value = Math.round(parseInt(value2));
+
+        var width = 1;
+        var id = setInterval(frame, 80);
+        function frame() {
+            if (width >= value) {
+                clearInterval(id);
+            } else {
+                width++;
+                if (width <= 100) {
+                    elem.style.width = width + '%';
+                    elem.innerHTML = width * 1 + '%';
+                }
+
+            }
+        }
+    };
+    function move2() {
+        var elem = document.getElementById("myBar2_" + @count);
+        var value = $("#valuePercent2_" + @count).text();
+        var value2 = Math.round(parseInt(value));
+
+        var width = 1;
+        var id = setInterval(frame, 80);
+        function frame() {
+            if (width >= value2) {
+                clearInterval(id);
+            } else {
+                width++;
+                if (width <= 100) {
+                    elem.style.width = width + '%';
+                    elem.innerHTML = width * 1 + '%';
+                }
+            }
+        }
+    };
+        </script>
+        <style>
+        #myProgress_@count{
+            width: 100%;
+            background-color: #ddd;
+        }
+
+        #myBar_@count {
+            width: 5%;
+            height: 30px;
+            background-color: rgba(255, 0, 0, 0.80); /*#4CAF50   rgba(34, 224, 108, 0.80)*/
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+
+        #myProgress2_@count {
+            width: 100%;
+            background-color: #ddd;
+        }
+
+        #myBar2_@count {
+            width: 5%;
+            height: 30px;
+            background-color: rgba(20, 20, 255, 0.85); /*#4CAF50  rgba(224, 248, 10, 0.96)*/
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+        </style>
+    }
+
+
+}

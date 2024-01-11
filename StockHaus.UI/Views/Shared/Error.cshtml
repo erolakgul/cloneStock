@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <hgroup>
+        <h1>Error.</h1>
+        <h2>An error occurred while processing your request.</h2>
+    </hgroup>
+ 
+    <div class="col-lg-12" style="margin-top:10px;">
+        <div class="col-lg-6 col-lg-offset-3" style="margin-top:5%;text-align:center;">
+            <h2>Aradığınız Sayfayı Kontrol Ediniz Lütfen</h2>
+        </div>
+        <div class="col-lg-6 col-lg-offset-3" style="margin-top:5%;text-align:center;">
+            <h2>Please,Check Page You Searched</h2>
+            <p id="catchError" style="display:none;">@ViewBag.Search</p>
+        </div>
+    </div>
+
+    <div class="col-lg-12" style="margin-top:50px;">
+        <div class="col-lg-4">
+            @*<div class="img-thumbnail" style="height:250px;">
+                    <img class="img-responsive" src="~/Slider/DMV4743.jpg" />
+                </div>*@
+        </div>
+        <div class="col-lg-4">
+            <a href="/"> <img class="img-responsive" src="~/Img/HAUSIT.png" /></a>
+        </div>
+        <div class="col-lg-4">
+            @*<div class="img-thumbnail" style="height:250px;">
+                    <img class="img-responsive" src="~/Slider/VBA5433P40.jpg" />
+                </div>*@
+        </div>
+    </div>
+
+    <script>
+
+    $(document).ready(function () {
+        var tt = $("#catchError").text();
+
+        swal({
+            title: tt,
+            text: "URL inizi Kontrol Ediniz Lütfen",
+            timer: 4000,
+            type: "warning",
+            showConfirmButton: false
+        });
+    });
+    </script>
+</body>
+</html>

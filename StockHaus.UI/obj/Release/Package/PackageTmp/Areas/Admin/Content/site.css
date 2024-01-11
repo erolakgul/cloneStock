@@ -1,0 +1,1192 @@
+﻿
+#item-header{
+     width: 143px;
+    height: 120px;
+    height: auto;
+    float: left;
+    margin-left:15px;
+    margin-top:-10px;
+}
+#item-header > a > img {
+    max-width: 100%;
+    height: auto;
+}
+
+nav#main {
+    /*background-image: linear-gradient(#ff0101, #ffafa0 50%, #ff5501);*/
+    background-color: #ffffff; /*deeadf e2de00 */
+    font-weight: bold;
+    margin-top: 5px;
+    border-color: #484e55;
+    opacity: 0.8;
+    /*border-radius: 25px;*/
+    height: 67px;
+}
+
+div#main > div > a {
+    color: white !important;
+}
+.passive:hover {
+    cursor:pointer;
+}
+
+.checkbox{
+    cursor:pointer;
+}
+
+#estimatedPersonalName > li:hover {
+    cursor: pointer;
+}
+
+.approved:hover{
+    cursor:pointer;
+}
+
+div.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    /*border-radius:20px;*/
+}
+
+    /* Style the buttons inside the tab */
+    div.tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+        /* Change background color of buttons on hover */
+        div.tab button:hover {
+            background-color: cadetblue !important;
+        }
+
+        /* Create an active/current tablink class */
+        div.tab button.active {
+            background-color: #ccc;
+        }
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+
+label {
+    color: black !important;
+}
+
+
+/*html, body { height: 100%; }
+body {
+    margin: 0;
+    background: radial-gradient(#666, #222);
+    overflow: hidden;
+}*/
+
+.moving-zone {
+    position: absolute;
+    top: 37%;
+    left: 35%;
+    width: 700px;
+    height: 200px;
+    margin: -60px 0 0 -150px;
+    perspective: 800px;
+    background-color: darkolivegreen;
+}
+
+.popup {
+    position: absolute;
+    width: 550px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 20px 0 20px 0;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    background: -webkit-linear-gradient(top left, white 50%, coral 50%);
+    background: -moz-linear-gradient(top left, white 50%, coral 50%);
+    background: -ms-linear-gradient(top left, white 50%, coral 50%);
+    background: -o-linear-gradient(top left, white 50%, coral 50%);
+    background: linear-gradient(top left, white 50%, coral 50%);
+}
+
+    .popup:before {
+        content: '';
+        position: absolute;
+        left: 5%;
+        top: 5%;
+        width: 90%;
+        height: 90%;
+        border-radius: inherit;
+        background: rgba(0,0,0,.1);
+        box-shadow: 0 0 40px 20px rgba(0,0,0,.1);
+        transform: translateZ(-100px);
+    }
+
+.popup-content {
+    background: #444;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px 0 10px 0;
+}
+
+.popup-text {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 100;
+    text-align: center;
+    transform: translateZ(15px);
+}
+
+    .popup-text b {
+        color: coral;
+        font-weight: 300;
+    }
+
+/* ////////////////////////////////  */
+
+body {
+    font-family: Calibri !important;
+    font-weight: bold;
+    font-size: 15px !important;
+    /*background: url(/Areas/Users/Image/bg/ae.jpg) no-repeat center center fixed #343f5d;*/
+    background-color: #f5f5f5 !important;
+    /*-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;*/
+    background-size: cover;
+}
+
+#fillMaterials {
+    border-top: 3px solid #ad172b;
+}
+
+.mission:hover, .app:hover {
+    cursor: pointer;
+}
+
+#appMat {
+    /*margin-top: 19%;
+    margin-left: 39%;*/
+    width: 100px;
+    background-color: darkcyan;
+    color: white;
+    height: 40px;
+}
+
+ #cancelled{
+    margin-top: 19%;
+    margin-left: 39%;
+    width: 185px;
+    background-color: #ad172b;
+    color: white;
+    height: 40px;
+}
+
+    #appMat:hover , #cancelled:hover {
+        background-color: darkslategrey;
+    }
+
+#assginMission {
+    color: black;
+    /*margin-top: 70%;
+    margin-left: -9%;*/
+    width: 100px;
+    height: 40px;
+}
+
+    #assginMission:hover {
+        background-color: black;/*#ad172b;*/
+        color: white;
+    }
+
+#submitData, #submitDataRef {
+    float: right;
+}
+
+#closedPage:hover {
+    cursor: pointer;
+}
+
+#navv {
+}
+
+#searchingSection {
+    border: 2px solid #c5c5c5;
+    /*background-color:#ffba4c;*/
+}
+
+    #searchingSection > div > .checkbox > label {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+#dropdownlist > div > label {
+    margin: 0 !important;
+}
+
+td > label {
+    margin: 0 !important;
+}
+
+.ui-dialog {
+    top: 2%;
+    left: 55%;
+    overflow: scroll !important;
+    height: 500px !important;
+}
+
+.ui-dialog-titlebar-close {
+    /*content:"X";
+    color:black !important;*/
+    background-color: red;
+}
+
+.update:hover {
+    cursor: pointer;
+}
+
+#invtCheck:hover {
+    cursor: pointer;
+}
+
+#navv {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0+100;White+to+Transparent */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+    -webkit-box-shadow: 0 0 0 4px white, 0 6px 4px black;
+    -moz-box-shadow: 0 0 0 4px white, 0 6px 4px black;
+    box-shadow: 0 0 0 0, 0 1px 4px black;
+}
+
+#showListMaterial > tr > td:nth-child(2) {
+    width: 81px !important;
+}
+
+div#teamselectPRD :hover {
+    cursor: pointer;
+}
+
+#getListOfMaterialPRD {
+    color: black !important;
+}
+
+#btnMaterialPrdSave:hover {
+    color: white !important;
+    background-color: black !important;
+}
+
+#teamselect > select:hover, #teamselect2 > select:hover {
+    cursor: pointer;
+}
+
+#missionSelect > select:hover {
+    cursor: pointer;
+}
+
+#stockStoreSelect > select:hover {
+    cursor: pointer;
+}
+#stockStoreSelectX > select:hover {
+    cursor: pointer;
+}
+
+#groupsel > select:hover, #groupsel2 > select:hover {
+    cursor: pointer;
+}
+
+#stockEndPlaceSelect > select:hover {
+    cursor: pointer;
+}
+
+#stockPlaceSelect > select:hover {
+    cursor: pointer;
+}
+#stockPlaceSelectX > select:hover {
+    cursor: pointer;
+}
+
+#stockPlaceEndSelect > select:hover {
+    cursor: pointer;
+}
+
+div#menu1 > ul.navbar-right > li > a#user > span {
+    color: #000;
+}
+
+/*div#menu1 > ul.navbar-right > li > a#user > span:hover {
+        color: #000000;
+    }*/
+
+.navbar-default .navbar-nav > .open > a#user:visited {
+    /*color:red !important;*/
+    background-color: white !important;
+}
+
+.navbar-default .navbar-nav > .open > a#user:focus {
+    /*color:red !important;*/
+    background-color: white !important;
+}
+
+div#menu1 > ul.navbar-right > li:hover {
+    /*background-image: linear-gradient(#15af89, #d3a309 50%, #ffffff);*/
+    background-color: rgba(0,0,0,0.5);
+}
+
+
+ul.dm_Menu > li > a {
+    font-weight: bold;
+}
+
+#isIncludeLabel:hover {
+    cursor: pointer;
+}
+
+/* searchbox */
+input[type=text]#search {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('https://www.w3schools.com/howto/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+    input[type=text]#search:focus {
+        width: 100%;
+    }
+
+input[type=text]#investigate {
+    width: 225px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    /*border-radius: 10px;*/
+    font-size: 16px;
+    background-color: white;
+    background-image: url('https://www.w3schools.com/howto/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    margin-top: 5px;
+}
+
+/*input[type=text]#investigate:focus {
+        width: 40%
+    }*/
+
+
+input[type=text]#filterStockPlace {
+    width: 200px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    /*border-radius: 10px;*/
+    font-size: 16px;
+    background-color: white;
+    background-image: url('https://www.w3schools.com/howto/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]#mat {
+    width: 225px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('https://www.w3schools.com/howto/searchicon.png');
+    background-position: 10px 5px;
+    background-repeat: no-repeat;
+    padding: 9px 20px 0px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    margin-top: 10px;
+}
+
+input[type=text]#matSec, input[type=text]#matSecPla {
+    width: 150px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    font-size: 16px;
+    background-color: white;
+    padding: 9px 20px 0px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    background-image: url('https://www.w3schools.com/howto/searchicon.png');
+    background-position: 10px 5px;
+    background-repeat: no-repeat;
+    margin-top: 10px;
+}
+
+#Include:hover {
+    cursor: pointer;
+}
+
+#getData {
+    margin-top: 9px !important;
+}
+
+#btnGetStockPlace, #getData {
+    /*width: 200px;*/
+    box-sizing: border-box;
+    /*border: 2px solid #ccc;*/
+    /*border-radius: 10px;*/
+    font-size: 16px;
+    /*background-color: white;*/
+    /*background-image: url('https://www.w3schools.com/howto/searchicon.png');*/
+    /*background-image: url('/Areas/Users/Image/durbun.png');*/
+    /*background-position: 70px 0px;*/
+    background-repeat: no-repeat;
+    padding: 0px 0px 0px 0px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    color: black;
+    margin-top: 20px;
+    width: 100px;
+    line-height: 30px;
+}
+
+input[type=text]#btnGetStockPlace:hover {
+    background-color: #f5f5f5;
+}
+
+/* searchbox */
+
+/* loader */
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid black;
+    border-right: 16px solid transparent;
+    border-bottom: 16px solid black;
+    border-left: 16px solid transparent;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    z-index: 1;
+    margin-left: 45%;
+    margin-top: 10%;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/* Add animation to "page content" */
+.animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 2s;
+    animation-name: animatebottom;
+    animation-duration: 2s;
+}
+
+@-webkit-keyframes animatebottom {
+    /*from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }*/
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes animatebottom {
+    /*from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }*/
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* loader */
+.animated {
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    display: block;
+}
+
+#btnMaterialPrdSave {
+    background-color: #ad172b !important;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+
+#estimatedPersonalName {
+    border-width: 2px !important;
+    /*border-color:rgba(255, 165, 0, 0.95) !important;*/
+    /*background-color:black;*/
+    /*border:2px inset black;*/
+    border-radius: 10px;
+}
+
+    #estimatedPersonalName > li {
+        list-style-type: none;
+        /*background-color:rgba(0, 115, 115, 0.9);*/
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 20px;
+        text-align: center;
+        /*color:red;*/
+        margin-top: 1px;
+    }
+
+#estimatedMaterialNumber {
+    border-width: 2px !important;
+    /*border-color:rgba(255, 165, 0, 0.95) !important;*/
+    /*background-color:black;*/
+    /*border:2px inset black;*/
+    border-radius: 10px;
+}
+
+    #estimatedMaterialNumber > li {
+        list-style-type: none;
+        /*background-color:rgba(0, 115, 115, 0.9);*/
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 15px;
+        text-align: center;
+        /*color:red;*/
+        margin-top: 1px;
+        width: 195px;
+    }
+
+.delete > i {
+    color: #ad172b;
+}
+
+.update > i {
+    color: rgba(0,0,0,0.8); /*#231f20;*/
+}
+
+
+#allMaterial {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0+100;White+to+Transparent */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+#btnDocumentSign {
+    /*color: white;
+    background-color: rgba(0,0,0,0.5);
+    font-weight: bold;
+    font-size: 16px;
+    border-color: #ad172b;
+    height:50px;*/
+    margin: 9px 0 0 0;
+    font-weight: bold;
+}
+
+li:nth-child(1):hover {
+    /*color: white;
+        background-color: black;
+        font-weight: bold;
+        border-color: red;*/
+    background-color: white !important;
+}
+
+li:nth-child(2) {
+    margin-left: 5px;
+}
+
+div#leftSideDiv > ul.nav-pills > li:first-child {
+    margin-top: 30px;
+}
+
+div#leftSideDiv > ul.nav-pills > li {
+    margin-bottom: 10px;
+}
+
+    div#leftSideDiv > ul.nav-pills > li > a {
+        background-color: #ad172b;
+        color: white;
+        border-radius: 20px;
+        font-family: 'Myriad Pro';
+    }
+
+        div#leftSideDiv > ul.nav-pills > li > a:hover {
+            /*background-color: rgba(250, 165, 50, 0.7) !important;*/
+            /*background-image: linear-gradient(#15af89, #d3a309 50%, #ffffff);*/
+            background-color: black;
+            color: white;
+        }
+
+div#leftSideDivTrace > ul.nav-pills > li:first-child {
+    margin-top: 30px;
+}
+
+div#leftSideDivTrace > ul.nav-pills > li {
+    margin-bottom: 10px;
+}
+
+    div#leftSideDivTrace > ul.nav-pills > li > a {
+        /*background-color: rgba(184, 148, 72, 0.7);*/
+        background-color: #ad172b;
+        color: white;
+        border-radius: 20px;
+        font-family: 'Myriad Pro';
+    }
+
+        div#leftSideDivTrace > ul.nav-pills > li > a:hover {
+            /*background-color: rgba(250, 165, 50, 0.7);*/
+            background-color: black;
+            color: white;
+        }
+
+.panel {
+    /*background-image: linear-gradient(#15af89, #352d89 30%, #ffffff) !important;*/
+    background-color: rgba(0,0,0,0.5) !important;
+}
+
+label {
+    /*color:white;*/
+}
+
+#btnOnayla > input:hover {
+    background-color: black !important;
+    color: white !important;
+}
+
+#envtStoreX > .input-group {
+    display: inline-block !important;
+}
+
+#btnLogin {
+    margin-top: 51px;
+}
+
+div#leftSideDivAdd > ul.nav-pills > li:first-child {
+    margin-top: 30px;
+}
+
+div#leftSideDivAdd > ul.nav-pills > li {
+    margin-bottom: 10px;
+}
+
+    div#leftSideDivAdd > ul.nav-pills > li > a {
+        /*background-color: rgba(184, 148, 72, 0.7);*/
+        background-color: #ad172b;
+        color: white;
+        border-radius: 20px;
+        font-family: 'Myriad Pro';
+    }
+
+        div#leftSideDivAdd > ul.nav-pills > li > a:hover {
+            /*background-color: rgba(250, 165, 50, 0.7);*/
+            background-color: black;
+            color: white;
+        }
+
+div#leftSideDivMat > ul.nav-pills > li:first-child {
+    margin-top: 30px;
+}
+
+div#leftSideDivMat > ul.nav-pills > li {
+    margin-bottom: 10px;
+}
+
+    div#leftSideDivMat > ul.nav-pills > li > a {
+        /*background-color: rgba(184, 148, 72, 0.7);*/
+        background-color: #ad172b;
+        color: white;
+        border-radius: 20px;
+        font-family: 'Myriad Pro';
+    }
+
+        div#leftSideDivMat > ul.nav-pills > li > a:hover {
+            /*background-color: rgba(250, 165, 50, 0.7);*/
+            background-color: #231f20;
+            color: white;
+        }
+
+#teamselect, teamselectPRD {
+    width: 100%;
+}
+
+    #teamselect > select, #teamselectPRD > select {
+        border-radius: 15px !important;
+        height: 45px;
+    }
+
+        #teamselect > select > option, #teamselectPRD > select > option {
+            /*border-radius: 25px !important;*/
+            background-color: transparent;
+        }
+
+#teamselect2, teamselectPRD {
+    width: 100%;
+}
+
+    #teamselect2 > select, #teamselectPRD > select {
+        border-radius: 15px !important;
+        height: 45px;
+    }
+
+        #teamselect2 > select > option, #teamselectPRD > select > option {
+            /*border-radius: 25px !important;*/
+            background-color: transparent;
+        }
+
+#groupsel {
+    width: 100%;
+}
+
+    #groupsel > select {
+        border-radius: 15px !important;
+        height: 45px;
+    }
+
+        #groupsel > select > option {
+            /*border-radius: 25px !important;*/
+            background-color: transparent;
+        }
+
+
+#groupsel2 {
+    width: 100%;
+}
+
+    #groupsel2 > select {
+        border-radius: 15px !important;
+        height: 45px;
+    }
+
+        #groupsel2 > select > option {
+            /*border-radius: 25px !important;*/
+            background-color: transparent;
+        }
+
+#teamNo {
+    width: 100%;
+}
+
+    #teamNo.input-group > input.form-control {
+        border-radius: 15px !important;
+    }
+
+#groupNo {
+    width: 100%;
+}
+
+    #groupNo.input-group > input.form-control {
+        border-radius: 15px !important;
+    }
+
+.input-group {
+    display: block !important;
+}
+
+/*#groupselect > div {
+    
+}*/
+
+
+label {
+    margin-top: 20px;
+}
+
+#groupselect > div.col-lg-6 > div.input-group > input.form-control {
+    border-radius: 15px !important;
+}
+
+#groupselect > div.col-lg-12 > div.input-group > input.form-control {
+    border-radius: 15px !important;
+}
+
+#groupselect > div.input-group > input.form-control {
+    border-radius: 15px !important;
+}
+
+div#perName > input.form-control {
+    margin-top: 25px;
+}
+
+div#perNameTwo > input.form-control {
+    margin-top: 40px;
+}
+
+div#inventType > input.form-control {
+    border-radius: 15px !important;
+}
+
+div#materialName > input.form-control {
+    border-radius: 15px !important;
+}
+
+#missionSelect > select {
+    border-radius: 15px !important;
+    height: 45px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#stockStoreSelect > select {
+    border-radius: 15px !important;
+    height: 45px;
+}
+#stockStoreSelectX > select {
+    border-radius: 15px !important;
+    height: 45px;
+}
+
+#stockPlaceSelect > select {
+    border-radius: 15px !important;
+    height: 45px;
+    margin-bottom: 25px;
+}
+#stockPlaceSelectX > select {
+    border-radius: 15px !important;
+    height: 45px;
+    margin-bottom: 25px;
+}
+
+#stockEndPlaceSelect > select {
+    border-radius: 15px !important;
+    height: 45px;
+    margin-bottom: 25px;
+}
+#stockEndPlaceSelectX > select {
+    border-radius: 15px !important;
+    height: 45px;
+    margin-bottom: 25px;
+}
+
+#stockPlaceEndSelect > select {
+    border-radius: 15px !important;
+    height: 45px;
+    margin-bottom: 25px;
+}
+
+#btnLogin, #btnMaterialSave{
+    background-color: darkcyan; /*#ad172b;*/
+    /*color:#920322;*/
+    color: white;
+    font-weight: bolder;
+    border-radius: 20px;
+}
+
+ #btnAppMatGet {
+         background-color: darkcyan; /*#ad172b;*/
+    /*color:#920322;*/
+    color: white;
+    font-weight: bolder;
+    border-radius: 8px;
+    height:42px;
+    margin-top:48px;
+ }
+
+    #btnLogin:hover, #btnMaterialSave:hover , #btnAppMatGet:hover{
+        background-color: black;
+        color: white;
+    }
+
+.adminPop {
+    color: darkcyan !important;
+}
+
+table {
+    text-align: center;
+}
+
+    table > thead > tr > th {
+        text-align: center;
+    }
+
+.table {
+    /*background: rgba(0, 0, 0, 0.4) !important;*/
+    /*background-color:rgba(0,0,0,0.5) !important;*/
+    background-color: white !important;
+    color: black;
+}
+
+tbody#getGroupTeam > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#showMaterialsForPer > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#getCountingMaterial > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#showLogMaterial > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#showCompletePercent > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#showListMaterial > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+td#sil > a:hover {
+    color: orange !important;
+    /*font-size: 25px !important;*/
+}
+
+tbody#getInventResult > tr:hover {
+    background-color: rgba(0,0,0,0.3) !important;
+    color: black !important;
+}
+
+tbody#getApprovingResult > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#getApprovedResult > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+tbody#showRoleOneMessage > tr:hover {
+    background-color: white;
+    color: black;
+}
+
+td#onay > a:hover {
+    color: blue !important;
+    font-size: 25px !important;
+    font-weight: bold;
+}
+
+td#detay > a:hover {
+    color: blue !important;
+    font-size: 20px !important;
+    font-weight: bold;
+}
+
+div#modalDialog > div.modal-content {
+    background-color: rgba(250, 165, 50, 0.9) !important;
+}
+
+tbody#loadInvent > tr:hover {
+    background-color: rgba(0, 115, 115, 0.9); /*#88f377;*/
+    color: black;
+    font-weight: bold;
+}
+
+tbody#loadInventory > tr:hover {
+    background-color: rgba(0, 115, 115, 0.9); /*#88f377;*/
+    color: black;
+    font-weight: bold;
+}
+
+#groupselectPRD > div.col-lg-6 > div.input-group > input.form-control {
+    border-radius: 15px !important;
+}
+
+#groupselectPRD > div.col-lg-6 > div#matProdQuantity.input-group > input.form-control {
+    height: 45px;
+}
+
+#groupselectPRD > div.col-lg-12 > div.input-group > input.form-control {
+    border-radius: 15px !important;
+}
+
+#groupselectPRD > div.input-group > input.form-control {
+    border-radius: 15px !important;
+}
+
+#teamFriends {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: maroon; /*#ad172b;*/
+}
+
+#getListOfMaterialPRD > thead > tr {
+    background-color: white !important;
+}
+
+#allMaterial {
+    background-color: #f5f5f5 !important;
+    margin-top: 15px;
+}
+
+    #allMaterial > thead > tr > th:nth-child(4) {
+        text-align: left;
+    }
+
+#showMaterialsForPer > tr > td:nth-child(4) {
+    text-align: left;
+}
+
+.popover-content {
+    width: 165px;
+}
+
+
+div.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    /*border-radius:20px;*/
+}
+
+    /* Style the buttons inside the tab */
+    div.tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+        /* Change background color of buttons on hover */
+        div.tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        div.tab button.active {
+            background-color: #ccc;
+        }
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+
+/*medya*/
+
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
+   #main{
+       height:auto !important;
+   }
+   #item-header{
+       width: 130px !important;
+   }
+}
+
+@media (max-width: 499px) {
+     #main{
+       height:auto !important;
+   }
+      #item-header{
+       width: 130px !important;
+   }
+    body {
+        /*background: url();*/
+        /*background: url(/Areas/Users/Image/clouds.gif) no-repeat center center fixed #343f5d; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;*/
+        /*background-color: rgba(242, 201, 7, 0.80) !important;*/
+        /*background-color:rgba(184, 225, 13, 0.97) !important;*/
+        /*background-color:rgba(79, 2, 40, 0.70) !important;*/
+    }
+
+    #showGroups > table {
+        font-size: 10px;
+        max-width: 98%;
+    }
+
+    #dtbs {
+        width: 39% !important;
+        margin: 0 !important;
+    }
+
+    table#tableResult {
+        font-size: 10px;
+        max-width: 98%;
+    }
+}

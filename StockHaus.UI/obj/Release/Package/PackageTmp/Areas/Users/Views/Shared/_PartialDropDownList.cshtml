@@ -1,0 +1,123 @@
+﻿@model StockHaus.UI.Areas.Users.Models.WarehouseStockplace
+
+@{
+
+    <div class="col-lg-4">
+        @Html.Label("Depo")
+        <div id="stockStoreSelect3" class="input-group">
+            @Html.DropDownListFor(x => x._stockStore, Model.StoreList, htmlAttributes: new { @class = "form-control", @onchange = "FillStockPlace2(2)" })
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        @Html.Label("Stok Yeri")
+        <div id="stockPlaceSelect3" class="input-group">
+            @Html.DropDownListFor(x => x._stockPlace, Model.StoreList, htmlAttributes: new { @class = "form-control", @onchange = "" })
+        </div>
+    </div>
+    <div class="col-lg-4">
+        @*<input id="btnGetStockPlace" type="button" name="button" value="" onkeyup=""><i class="fa fa-search"></i>*@
+        <button id="btnGetStockPlace" type="button" name="button" value="" onkeyup=""><i class="fa fa-search"></i>GETİR</button>
+    </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+        FillStockPlace2(1);
+    });
+
+    $("#btnGetStockPlace").click(function () {
+        FilterStockPlacePage();
+    });
+
+    function FillStockPlace2(idx) {
+        var _depo = localStorage.getItem("depo");
+       // console.log("FillStockPlace2 :" + idx);
+        var storeNo = $("#stockStoreSelect3 > select").find("option:selected").text();
+        //var id = storeNo;
+        var id = "";
+
+        if (idx == 2) {
+            id = storeNo;
+        } else {
+            id = _depo;
+            //console.log("uznlk :" + _depo);
+            if (_depo == null) {
+                id = storeNo;
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/Users/Panel/SelectStockPlaceForWriter/" + id,
+            contentType: "application/json; charset=utf-8",
+            //dataType: "html",
+            cache: false,
+            data: "{ id: '" + id + "'}",
+            success: function (result) {
+                //stok yeri ile ilgili combobox doldurulacak
+                $("#stockPlaceSelect3 > select").empty();
+                // $("#stockPlaceEndSelect > select").empty();
+                
+                var listItems = null;
+                for (var i = 0; i < result.length; i++) {
+                    listItems += "<option value='" + result[i] + "'>" + result[i] + "</option>";
+                };
+                //console.log("pnl :" + listItems.replace("undefined", ""));
+                $("#stockPlaceSelect3 > select").html(listItems); //.replace("undefined", "")
+
+
+                var _depo = localStorage.getItem("depo");
+                var _stokYeri = localStorage.getItem("stokyeri");
+                //console.log("dadadasd :" + _depo + "//" + _stokYeri);
+               // console.log("ajax :" + idx);
+                if (idx == 1) {
+                    $('#stockStoreSelect3 > select > option[value="' + _depo + '"]').attr("selected", "selected");
+                };
+            },
+            error: function (jqXHR, exception) {
+                console.log(jqXHR);
+            }
+        });
+
+    };
+
+
+    function FilterStockPlacePage() {
+        var stockPlace = '';
+
+        var _depo = $("#stockStoreSelect3 > select").find("option:selected").val();
+        var _stokYeri = $("#stockPlaceSelect3 > select").find("option:selected").val();
+
+        localStorage.setItem("depo", _depo);
+        localStorage.setItem("stokyeri", _stokYeri);
+
+        stockPlace = _depo + 'ç' + _stokYeri;
+        //console.log("sy :" + $("#Include").prop('checked'));
+
+        if ($("#Include").prop('checked') == true) {
+            $("#loadWaiting").show();
+
+            $.ajax({
+                type: "POST",
+                url: "/Users/Panel/FilteredStockPlace/" + stockPlace,
+                //contentType: "application/json; charset=utf-8",
+                dataType: "Html",
+                cache: false,
+                data: "{ id:'" + stockPlace + "'}",
+                success: function (result) {
+                    $("#ListSearchedMaterialDiv").html(result);
+
+                    $("#loadWaiting").hide();
+                },
+                error: function (jqXHR, exception) {
+                    console.log(jqXHR);
+                }
+            });
+
+        } else {
+            firstFunction();
+        };
+    };
+</script>

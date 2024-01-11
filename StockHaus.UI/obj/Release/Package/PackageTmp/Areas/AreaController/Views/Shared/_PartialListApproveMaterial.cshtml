@@ -1,0 +1,180 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<StockHaus.ModelClass.AreaController.InventResult>
+@using StockHaus.Core.BaseService
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="col-lg-2 col-lg-offset-9">
+            <input id="cancelled" type="button" name="cancelledInvent" value="İPTAL ET" />
+        </div>
+    </div>
+</div>
+
+<div class="pagedList" style="float:right;">
+
+    @{
+        if (Model != null)
+        {
+            string _depoStock = ViewBag.DepoStockCancel + "X";
+
+            @Html.PagedListPager(Model, id => Url.Action("GetListMaterialOrder", new { id = _depoStock + id }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "fillApproveMaterials" }))  //, OnBegin = "waitingMat()"
+        }
+    }
+
+</div>
+
+<table id="getListOfMaterial" class="table table-hover table-bordered" style="margin-top:32px;">
+    <thead style="background-color:gray !important;color:white;">
+        <tr>
+            <th>SAYIM KODU</th>
+            <th style="width:150px;">MALZEME</th>
+            <th>Indis</th>
+            <th style="width:500px;">İSİM</th>
+            <th>SERİNO</th>
+            <th>MİKTAR</th>
+            <th>SİSTEM</th>
+            <th style="width:50px;">##</th>
+            <th style="width:6%">Stok Y.</th>
+        </tr>
+    </thead>
+    <tbody id="showListMaterialX">
+        @{
+            ServicePoints point = new ServicePoints();
+
+            if (Model != null)
+            {
+            int totalCount = Model.Count;
+            int _compareName = 0;
+
+            foreach (var item in Model)
+            {
+                _compareName = _compareName + 1;
+                string _df = "MAT" + _compareName;
+
+                string _varMı = point.MaterialService.IsMission(item.MatCode, item.MatIndex, item._matSpecStock, item._matSerNo, item.MatSection, item.MatSectionPlace);
+                bool _AGRUBUMU = point.GroupOfMaterialService.IsAgroup(item.MatCode);
+                var _quan = point.MaterialService.WhatIsCount(item.MatCode, item.MatIndex, item._matSpecStock, item._matSerNo, item.MatSection, item.MatSectionPlace);
+
+                if (_AGRUBUMU)
+                {
+                    <tr id="@_df" class="@_varMı" style="background-color:pink;">
+                        <td>@item.InventCode</td>
+                        <td>@item.MatCode</td>
+                        <td>@item.MatIndex</td>
+                        <td>@item._matName</td>
+                        <td>@item._matSerNo</td>
+                        <td>@item._S1</td>
+                        <td>@_quan</td>
+                        <td><input class="radio approved" type="radio" name="@_df" style="margin-left:37%;" value="@item._S1ID" /></td>
+                        <td>@item.MatSectionPlace</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr id="@_df" class="@_varMı">
+                        <td>@item.InventCode</td>
+                        <td>@item.MatCode</td>
+                        <td>@item.MatIndex</td>
+                        <td>@item._matName</td>
+                        <td>@item._matSerNo</td>
+                        <td>@item._S1</td>
+                        <td>@_quan</td>
+                        <td><input class="radio approved" type="radio" name="@_df" style="margin-left:37%;" value="@item._S1ID" /></td>
+                        <td>@item.MatSectionPlace</td>
+                    </tr>
+                }
+            }
+
+            }
+}
+    </tbody>
+</table>
+
+<script>
+
+    $("#cancelled").click(function () {
+        var _depo = $("#stockStoreSelectX > select > option:selected").text();
+        var _stokYeri2 = $("#stockPlaceSelectX > select > option:selected").text();
+        var _stokYeriEnd = $("#stockEndPlaceSelectX > select > option:selected").text();
+
+        localStorage.setItem("_appStore", _depo);
+        localStorage.setItem("_appStorePlace", _stokYeri2);
+        localStorage.setItem("_appEndStorePlace", _stokYeriEnd);
+
+        var _collect = {
+            "_matList": [],
+            "_ware": _depo
+        };
+
+        var count = 0;
+
+        $("input.approved:checked").each(function () {
+            count = parseInt(count) + parseInt(1);
+
+            var _trId = $(this).attr("name");
+
+            var _inventIdX = $("#showListMaterialX > tr#" + _trId + " > td:first-child").text();
+            var _matcode = $("#showListMaterialX > tr#" + _trId + " > td:nth-child(2)").text();
+            var _indis = $("#showListMaterialX > tr#" + _trId + " > td:nth-child(3)").text();
+            var _serno = $("#showListMaterialX > tr#" + _trId + " > td:nth-child(5)").text();
+            var _stokYeri = $("#showListMaterialX > tr#" + _trId + " > td:nth-child(9)").text();
+            var _idx = $("#showListMaterialX > tr#" + _trId + " > td:nth-child(8) > input").attr("value");
+            var _userx = $("#userNamed").text().trim();
+
+            _collect._matList.push({ "_inventoryCode": _inventIdX, "_matCode": _matcode, "_matIndis": _indis, "_serNo": _serno, "_stockPlace": _stokYeri, "_id": _idx , "_user": _userx});
+        });
+
+        if (count == 0) {
+            swal("", "İptal edilecek malzeme seçilmemiş", "error");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/AreaController/Panel/CancelApprovedMaterial/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            cache: false,
+            data: JSON.stringify(_collect),//"{ storeNo: '" + id + "'}",
+            success: function (result) {
+
+                if (result == "success") {
+                    swal("", "Onaylar iptal edildi.", "success");
+                } else if (result == "false") {
+                    swal("", "Onaylar iptal edilemedi", "error");
+                    return false;
+                };
+
+                var _depo2 = localStorage.getItem("_appStore");
+                var _stokYeri2 = localStorage.getItem("_appStorePlace");
+                var _stokYeriEnd = localStorage.getItem("_appEndStorePlace");
+
+                var _cllct = { "_ware": _depo2, "_stock": _stokYeri2, "_endStockPlace": _stokYeriEnd };
+
+                //////
+                $.ajax({
+                    type: "GET",
+                    url: "/AreaController/Panel/GetListApproveMaterial/",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    cache: false,
+                    data: JSON.stringify(_cllct),
+                    success: function (result) {
+                        $("#fillApproveMaterials").html(result);
+                    },
+                    error: function (jqXHR, exception) {
+                        console.log(jqXHR);
+                    }
+                });
+                //////
+            },
+            error: function (jqXHR, exception) {
+                console.log(jqXHR);
+            }
+        });
+
+
+    });
+
+</script>

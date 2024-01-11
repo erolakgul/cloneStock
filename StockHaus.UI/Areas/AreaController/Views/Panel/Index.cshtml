@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Stock HAUS - Alan Sorumlusu";
+    Layout = "~/Areas/AreaController/Views/Shared/_LayoutPanel.cshtml";
+}
+
+<div class="col-lg-12">
+    <div class="tab">
+        @*<button class="tablinks" onclick="openTop(event, 'envtAppStoreX',4)">ONAYLANMIŞ MALZEMELER</button>*@
+        <button class="tablinks" onclick="openTop(event, 'envtSignRole',9)">İMZALAMA YETKİSİ VERME</button>
+        <button class="tablinks" onclick="openTop(event, 'envtAppStoreXYZ',5)">ONAYLANMIŞ MALZEMELER / İPTAL ETME</button>
+        <button class="tablinks" onclick="openTop(event, 'envtStoreX',3)">DEPO SAYIM ONAYLAMA</button>
+    </div>
+
+    @*   _PartialAppRsltShow controller dan dönen değeri  buraya ajax tan yapıştırırız.   *@
+    @*<div id="envtAppStoreX" class="col-lg-12 tabcontent">
+            <div id="rsltApprovedMat">
+
+            </div>
+        </div>*@
+    <div id="envtAppStoreXYZ" class="col-lg-12 tabcontent">
+        <div id="fillAppMat">
+            @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("_PartialChooseWarehouse")*@
+        </div>
+    </div>
+    <div id="envtStoreX" class="col-lg-12 tabcontent">
+        <div id="fillApp">
+            @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("_PartialChooseWarehouse")*@
+        </div>
+    </div>
+
+    <div id="envtSignRole" class="col-lg-12 tabcontent">
+        <div class="col-lg-6" id="fillSignRole">
+
+        </div>
+        <div class="col-lg-3 col-lg-offset-3" id="fillMissionPlace">
+            <h4 style="text-align:center;"><bold>GÖREVLİ OLDUĞU</bold></h4>
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Depo</th>
+                        <th>Stok Yeri (B)</th>
+                        <th>Stok Yeri (F)</th>
+                    </tr>
+                </thead>
+                <tbody id="missionPlace">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+    });
+
+    function openTop(evt, cityName, no) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+        if (no == 3) { //
+            // depo sayım onaylama scripti
+            wareApprovePage();
+        } else if (no == 4) {
+            showApproveMaterial(); //rsltApprovedMat
+        } else if (no == 5) {
+            wareApproveMaterialPage(); //rsltApprovedMat
+        } else if (no == 9) {
+            getPersonel();
+        }
+    };
+
+</script>
+
+

@@ -1,0 +1,120 @@
+﻿@model ICollection<StockHaus.ModelClass.AdminPage.UserModel>
+
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Personel</th>
+                <th>Seç</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @{
+                foreach (var item in Model)
+                {
+                    if (item._isSignable)
+                    {
+                        <tr style="background-color:#59f66e;">
+                            <td>@item._name</td>
+                            <td>İmzalayabilir</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item._name</td>
+                            <td><input class="checkbox signable" style="margin-left:48%;" type="checkbox" name="@item._name" value="@item._id" /></td>
+                        </tr>
+                    }
+
+                }
+}
+
+        </tbody>
+    </table>
+    
+<script>
+    $(document).ready(function () {
+
+        $("input.signable").click(function () {
+            var _username = $(this).attr("name");
+
+            missionAssignedBefore(_username);
+
+            ///////////////////////////
+            swal({
+                title: "Emin misiniz?",
+                text: "Personele İmzalama Yetkisi Verilsin Mi ? İşlem Geri Alınamayacak !",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Evet!",
+                cancelButtonText: "Hayır!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+    function (isConfirm) {
+        if (isConfirm) {
+
+            $.ajax({
+                type: "POST",
+                url: "/AreaController/Panel/AuthSign/",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                data: "{ id: '" + _username + "'}",
+                success: function (result) {
+
+                    if (result == true) {
+                        $("#missionPlace > tr").remove();
+                        swal("", "Personele İmzalama Yetkisi verildi..", "success");
+                    } else if (result == false) {
+                        swal("", "Yetki verilemedi..", "warning");
+                    };
+                    
+                    getPersonel();
+                },
+                error: function (jqXHR, exception) {
+                    console.log(jqXHR);
+                }
+            });
+
+        } else {
+            $("#missionPlace > tr").remove();
+            swal("İptal Edildi", "", "error");
+            getPersonel();
+        }
+    });
+
+        });
+
+    });
+
+
+
+    function missionAssignedBefore(id) {
+
+        $.ajax({
+            type: "POST",
+            url: "/AreaController/Panel/CheckedMissionPlace/" + id,
+            //contentType: "application/json; charset=utf-8",
+            dataType: "Json",
+            cache: false,
+            data: "{ id: '" + id + "'}",
+            success: function (result) {
+                $("#missionPlace > tr").remove();
+                // partialassigntask
+                $.each(result, function (index, element) {
+                    var _ls = "<tr> <td>" + element._ware + "</td>" + "<td>" + element._stock + "</td>" + "<td>" + element._endStockPlace + "</td></tr>";
+                    $("#missionPlace").append(_ls);
+                });
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                console.log(jqXHR);
+            }
+        });
+        //proc();
+    };
+</script>

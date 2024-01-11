@@ -1,0 +1,549 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<StockHaus.ModelClass.UserPage.MaterialsModel>
+@using StockHaus.Core.BaseService
+
+
+<table id="allMaterial" class="table table-hover animate-bottom">
+    <thead>
+        <tr style="background-color:white;color:black;font-weight:bold;">
+            <th style="border-right:1px solid black">SIRA</th>
+            <th style="border-right:1px solid black">MALZEME</th>
+            <th style="border-right:1px solid black">INDIS</th>
+            <th style="border-right:1px solid black;width:570px;">MALZEME ADI</th>
+            <th style="border-right:1px solid black">M. SERİ NO</th>
+            <th style="border-right:1px solid black">ÖZEL STOK</th>
+            <th style="border-right:1px solid black">TÜR</th>
+            <th style="border-right:1px solid black">DEPO</th>
+            <th style="border-right:1px solid black">Stok Yeri</th>
+            <th style="border-right:1px solid black">Miktar</th>
+            @{
+                int teamNo = 0;
+                int groupNo = 0;
+
+                ServicePoints point = new ServicePoints();
+
+                if (Model != null)
+                {
+                    string email = Session["Email"].ToString();
+
+                    StockHaus.ModelClass.UserPage.TeamGroup _dt = point.UserService.GetTeamAndGroup(email);
+                    teamNo = _dt._team;
+                    groupNo = _dt._group;
+
+                    <th id="teamNoTR" style="display:none;">@teamNo</th>
+                    <th id="groupNoTR" style="display:none;">@groupNo</th>
+
+                    if (_dt._team == 3)
+                    {
+                        <th id="sysQ" style="border-right:1px solid black">Sistem</th>
+                    }
+
+                }
+
+            }
+
+            <th colspan="2">Düzenle</th>
+            @*<th></th>*@
+        </tr>
+    </thead>
+    <tbody id="showMaterialsForPer">
+
+        @{
+            if (Session["Email"] != null)
+            {
+
+                if (Model != null)
+                {
+                    var orderedForMaterial = Model.Where(x => x.IsActive).ToList();
+
+                    int count = 0;
+                    foreach (var item in orderedForMaterial)
+                    {
+                        count = count + 1;
+
+                        /* her grubun saydığı kendisine gösterilsin diye eklendi*/
+                        string email = Session["Email"].ToString();
+                        string name = point.UserService.GetNameFromMail(email);
+
+                        int _last = point.InventCodeCountService.GetCountOrder(teamNo, groupNo);
+
+                        string inventCode = _last + "X" + teamNo + "X" + groupNo;
+
+                        // o kalem sayılmış mı
+                        var _countList = point.InventoryService.GetActiveInventList(item.MatCode, item.MatIndex, inventCode, item.MatSerialNumber, item.MatSection, item.MatSectionPlace);
+                        // kalem onaylanmış mı
+                        //var _countListApproved = point.InventoryService.GetApprovedInventList(item.MatCode, item.MatIndex, inventCode, item.MatSerialNumber, item.MatSection, item.MatSectionPlace);
+                        // o kalem atanmış mı
+                        var _assignedThirdTeam = point.MaterialService.IsMission(item.MatCode, item.MatIndex, item.MatSpecialStock, item.MatSerialNumber, item.MatSection, item.MatSectionPlace);
+
+
+                        if (_countList != null)
+                        {
+                            if (_countList.IsApproved && _countList.IsActive && _countList.ApprovedPers != "")
+                            {
+                                // kalem sayılmış ve alan sorumlusu tarafından onaylanmış demektir MAVİ görünür
+                                // SİLME - EKLEME - DÜZENLEME kalemleri kapatılır
+
+                                var clsName = "cls" + @item.ID;
+                                var matQ = "matQ" + @item.ID;
+                                var del = "del" + @item.ID;
+                                var addx = "add" + @item.ID;
+                                var updx = "update" + @item.ID;
+                                <tr class="@clsName" style="background-color:blue;">
+                                    <td>@item.ID</td>
+                                    <td>@item.MatCode</td>
+                                    <td>@item.MatIndex</td>
+                                    <td>@item.MatName</td>
+                                    <td>@item.MatSerialNumber</td>
+                                    <td>@item.MatSpecialStock</td>
+                                    <td>@item.MatType</td>
+                                    <td>@item.MatSection</td>
+                                    <td>@item.MatSectionPlace</td>
+                                    <td><label id="@matQ">@_countList.MatQuantity</label></td>
+                                    @{
+
+                                if (teamNo == 3)
+                                {
+                                    <td>#</td>
+                                        <td id="delMatX">
+                                            <a class="delete @del" href="#showMaterialsForPer" onclick="delMat(@item.ID)"><i class="fa fa-close fa-2x"></i></a>
+                                        </td>
+                                        <td>
+                                            @*<a class="update @addx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="addMat(@item.ID)"><i class="fa fa-plus fa-2x"></i></a>*@
+                                            <a id="@_countList.ID" class="update @updx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="updMat(@item.ID)"><i class="fa fa-pencil fa-2x"></i></a>
+                                        </td>
+                                }
+                                else
+                                {
+                                    <td id="delMatX"></td>
+                                        <td></td>
+                                }
+
+                                    }
+
+                                </tr>
+
+                            }
+                            else if (!_countList.IsApproved && _countList.IsActive && String.IsNullOrEmpty(_countList.ApprovedPers))
+                            {
+
+                                if (_assignedThirdTeam == "1")
+                                {
+                                    // kalem sayılmış fakat alan sorumlusu tarafından bu kalem 3.takıma yönlendirilmiş SARI görnür
+                                    // SİLME - EKLEME - DÜZENLEME kalemleri kapatılır
+
+                                    var clsName = "cls" + @item.ID;
+                                    var matQ = "matQ" + @item.ID;
+                                    var del = "del" + @item.ID;
+                                    var addx = "add" + @item.ID;
+                                    var updx = "update" + @item.ID;
+                                    <tr class="@clsName" style="background-color:yellow;">
+                                        <td>@item.ID</td>
+                                        <td>@item.MatCode</td>
+                                        <td>@item.MatIndex</td>
+                                        <td>@item.MatName</td>
+                                        <td>@item.MatSerialNumber</td>
+                                        <td>@item.MatSpecialStock</td>
+                                        <td>@item.MatType</td>
+                                        <td>@item.MatSection</td>
+                                        <td>@item.MatSectionPlace</td>
+                                        <td><label id="@matQ">@_countList.MatQuantity</label></td>
+                                        @if (teamNo == 3)
+                                        {
+                                            <td>#</td>
+                                        }
+                                        <td id="delMatX">
+                                            @*<a class="delete @del" style="display:none;" href="#showMaterialsForPer" onclick="delMat(@item.ID)"><i class="fa fa-close fa-2x"></i></a>*@
+                                        </td>
+                                        <td>
+                                            @*<a class="update @addx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="addMat(@item.ID)"><i class="fa fa-plus fa-2x"></i></a>
+                                                <a id="" class="update @updx" style="display:none;" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="updMat(@item.ID)"><i class="fa fa-pencil fa-2x"></i></a>*@
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    // kalem sayılmış fakat alan sorumlusu veya herhangi biri tarafından müdahalede bulunulmamış KOYU YEŞİL görünür
+                                    // sadece EKLEME kalemi kapatılır
+
+                                    var clsName = "cls" + @item.ID;
+                                    var matQ = "matQ" + @item.ID;
+                                    var del = "del" + @item.ID;
+                                    var addx = "add" + @item.ID;
+                                    var updx = "update" + @item.ID;
+                                    <tr class="@clsName" style="background-color:olivedrab;">
+                                        <td>@item.ID</td>
+                                        <td>@item.MatCode</td>
+                                        <td>@item.MatIndex</td>
+                                        <td>@item.MatName</td>
+                                        <td>@item.MatSerialNumber</td>
+                                        <td>@item.MatSpecialStock</td>
+                                        <td>@item.MatType</td>
+                                        <td>@item.MatSection</td>
+                                        <td>@item.MatSectionPlace</td>
+                                        <td><label id="@matQ">@_countList.MatQuantity</label></td>
+                                        @if (teamNo == 3)
+                                        {
+                                            <td>#</td>
+                                        }
+                                        <td id="delMatX"><a class="delete @del" href="#showMaterialsForPer" onclick="delMat(@item.ID)"><i class="fa fa-close fa-2x"></i></a></td>
+                                        <td>
+                                            @*<a class="update @addx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="addMat(@item.ID)"><i class="fa fa-plus fa-2x"></i></a>*@
+                                            <a id="@_countList.ID" class="update @updx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="updMat(@item.ID)"><i class="fa fa-pencil fa-2x"></i></a>
+                                        </td>
+                                    </tr>
+
+                                }
+
+                            }
+                            else if (!_countList.IsApproved && !_countList.IsActive && !String.IsNullOrEmpty(_countList.ApprovedPers))
+                            {
+                                // kalem sayılmış fakat alan sorumlusu tarafından sayılan o kalem reddedilmiş demektir. BORDO görünür.
+                                // SİLME - EKLEME - DÜZENLEME kalemleri kapatılır
+
+                                var clsName = "cls" + @item.ID;
+                                var matQ = "matQ" + @item.ID;
+                                var del = "del" + @item.ID;
+                                var addx = "add" + @item.ID;
+                                var updx = "update" + @item.ID;
+                                <tr class="@clsName" style="background-color:darkred;">
+                                    <td>@item.ID</td>
+                                    <td>@item.MatCode</td>
+                                    <td>@item.MatIndex</td>
+                                    <td>@item.MatName</td>
+                                    <td>@item.MatSerialNumber</td>
+                                    <td>@item.MatSpecialStock</td>
+                                    <td>@item.MatType</td>
+                                    <td>@item.MatSection</td>
+                                    <td>@item.MatSectionPlace</td>
+                                    <td><label id="@matQ">@_countList.MatQuantity</label></td>
+                                    @if (teamNo == 3)
+                                    {
+                                        <td>#</td>
+                                    }
+                                    <td id="delMatX">
+                                        @*<a class="delete @del" style="display:none;" href="#showMaterialsForPer" onclick="delMat(@item.ID)"><i class="fa fa-close fa-2x"></i></a>*@
+                                    </td>
+                                    <td>
+                                        @*<a class="update @addx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="addMat(@item.ID)"><i class="fa fa-plus fa-2x"></i></a>
+                                            <a id="" class="update @updx" style="display:none;" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="updMat(@item.ID)"><i class="fa fa-pencil fa-2x"></i></a>*@
+                                    </td>
+                                </tr>
+
+                            }
+
+                        }
+                        else
+                        {
+                            // kalem sayılmamış demektir bu durumda bu satır BEYAZ olarak gösterilir
+                            // sadece DÜZENLEME butonu kapalı
+
+                            var clsName = "cls" + @item.ID;
+                            var matQ = "matQ" + @item.ID;
+                            var del = "del" + @item.ID;
+                            var addx = "add" + @item.ID;
+                            var updx = "update" + @item.ID;
+                            <tr class="@clsName">
+                                <td>@item.ID</td>
+                                <td>@item.MatCode</td>
+                                <td>@item.MatIndex</td>
+                                <td>@item.MatName</td>
+                                <td>@item.MatSerialNumber</td>
+                                <td>@item.MatSpecialStock</td>
+                                <td>@item.MatType</td>
+                                <td>@item.MatSection</td>
+                                <td>@item.MatSectionPlace</td>
+                                <td><label id="@matQ">0</label></td>
+                                @if (teamNo == 3)
+                                {
+                                    <td>#</td>
+                                }
+                                <td id="delMatX"><a class="delete @del" href="#showMaterialsForPer" onclick="delMat(@item.ID)"><i class="fa fa-close fa-2x"></i></a></td>
+                                <td>
+                                    <a class="update @addx" href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="addMat(@item.ID)"><i class="fa fa-plus fa-2x"></i></a>
+                                    @*<a id="" class="update @updx"  href="#showMaterialsForPer" data-toggle="modal" data-target="#myModal" onclick="updMat(@item.ID)"><i class="fa fa-pencil fa-2x"></i></a>*@
+                                </td>
+                            </tr>
+                        };
+
+
+                        ////////////////////////// test başlangıç //////////////////////////
+
+
+                        ////////////////////////// test son //////////////////////////
+                    }
+                }
+
+            }
+
+        }
+
+    </tbody>
+</table>
+
+
+@{
+    if (Model == null)
+    {
+        <ul>
+            <li style="margin-left:350px;width:500px;margin-top:150px;font-size:25px;font-weight:bold;"><a href="#" onclick=""><i class="fa fa-folder-o"></i>	Arama Filtre Seçenekleriniz Uygun Değil veya Filtrenize Göre Seçenek Bulunamadı. </a></li>
+        </ul>
+    }
+
+}
+
+
+<div id="firstPagedList" class="pagedList" style="float:right;">
+
+    @{
+        var fff = Html.ViewBag.StorageItem;
+
+        if (Model != null)
+        {
+            var depo = Model.Select(x => x.MatSection).FirstOrDefault();
+            var stokyeri = Model.Select(x => x.MatSectionPlace).FirstOrDefault();
+            var belgeID = depo + "X" + stokyeri + "X"; // +fff;                                                                                                                                                                       //ListSearchedMaterialDiv  allMaterial   viewMaterialX
+            @Html.PagedListPager(Model, id => Url.Action("MatList", new { id = belgeID + "Ş" + id }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "viewMaterialX", OnBegin = "waiting()", OnSuccess = "ResultAction()", OnFailure = "FailureAction()" }))
+        }
+
+    }
+
+</div>
+
+
+<div id="secondPagedList" class="pagedList" style="float:right;">
+    @{
+        if (Model != null)
+        {
+            //var depo = Model.Select(x => x.MatSection).FirstOrDefault();
+            //var stokyeri = Model.Select(x => x.MatSectionPlace).FirstOrDefault();
+            //var belgeID = depo + "X" + stokyeri;                                                                                                                                                                       //ListSearchedMaterialDiv  allMaterial   viewMaterialX
+            @Html.PagedListPager(Model, id => Url.Action("MatList", new { id = "Ş" + id }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "viewMaterialX", OnBegin = "waiting()", OnSuccess = "ResultAction()", OnFailure = "FailureAction()" }))
+        }
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var _isChecked = localStorage.getItem("include");
+
+        if (_isChecked == "checked") {
+            //console.log("checked");
+            $("#Include").prop('checked', true);
+            $("#Include").attr('checked', true);
+        } else {
+            $("#Include").prop('checked', false);
+            $("#Include").prop('checked', false);
+        }
+
+        $("#Include").change(function () {
+            if (this.checked) {
+                $("#firstPagedList").show();
+                $("#secondPagedList").hide();
+                localStorage.setItem("include", "checked");
+            } else {
+                $("#firstPagedList").hide();
+                $("#secondPagedList").show();
+                localStorage.setItem("include", "unchecked");
+            };
+        });
+
+        if ($("#Include").prop('checked') == true) {
+            //console.log("true");
+            $("#firstPagedList").show();
+            $("#secondPagedList").hide();
+        } else {
+            //console.log("false");
+            $("#firstPagedList").hide();
+            $("#secondPagedList").show();
+        }
+
+
+        $(".delete").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#showMaterialsForPer").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        $(".update").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#showMaterialsForPer").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        // inputa girilen değerin büyütülmesi
+        $("#indisData").bind('keyup', function (e) {
+            if (e.which >= 97 && e.which <= 122) {
+                var newKey = e.which - 32;
+                // I have tried setting those
+                e.keyCode = newKey;
+                e.charCode = newKey;
+            };
+            $("#indisData").val(($("#indisData").val().trim()).toUpperCase());
+
+            var _val = $(this).val();
+            console.log("aa :" + $(this).val().length);
+
+            if ($("#clsIndis").text() != _val) {
+                $("#warningIndis").css("display", "block");
+                $("#submitDataRef").css("display", "block");
+                $("#submitData").css("display", "none");
+
+            } else if ($("#clsIndis").text() == _val) {
+                $("#warningIndis").css("display", "none");
+                $("#submitDataRef").css("display", "none");
+                $("#submitData").css("display", "block");
+            }
+
+            if ($(this).val().length == 0) {
+                $("#warningIndis").css("display", "none");
+                $("#submitDataRef").css("display", "none");
+                $("#submitData").css("display", "block");
+            }
+
+
+        });
+
+        $("#serialNumData").bind('keyup', function (e) {
+            if (e.which >= 97 && e.which <= 122) {
+                var newKey = e.which - 32;
+                // I have tried setting those
+                e.keyCode = newKey;
+                e.charCode = newKey;
+            };
+            $("#serialNumData").val(($("#serialNumData").val().trim()).toUpperCase());
+        });
+
+
+        $("#investigate").keyup(function (evt) {
+            if ($("#investigate").val().length === 0) {
+                var _xcd = "\n".charCodeAt(0);
+                _xcd = parseInt(_xcd);
+                if (
+                    //(evt.which >= 48 && evt.which <= 57) || (evt.which >= 65 && evt.which <= 90) || (evt.which >= 97 && evt.which <= 122) || (evt.which == 08)
+                    evt.which == 13 || evt.which == _xcd
+                    ) {
+                    if ($("#investigate").val().trim().length == 0) {
+                        //a9();
+                    }
+                }
+
+            };
+        });
+
+    });
+
+    //pre estimated
+    setInterval(function () {
+        var ssid = $("#investigate").val();
+        if (ssid == null || ssid == "") {
+            $("#showMaterialsForPersonel > table#searchMaterial").remove();
+        }
+    }, 1000);
+
+    function GetMaterialCodeForInvestigate() {
+        var materialCharID = '';
+        var id = '';
+        var email = $("#userNamed").text().split('.').join('ş');
+
+        var _stockPlace = $("#filterStockPlace").val();
+
+        //var inventoryCode = $("#showMaterialsForPer > tr > td:first").text();
+        //setInterval(function () {
+        if ($("#investigate").val() != materialCharID) {
+            materialCharID = $("#investigate").val();
+            //console.log("uz :" + materialCharID.length + "//değer :" + $("#investigate").val());
+            // 4 karakter girildikten sonra sıralasın
+            //console.log("dd :" + materialCharID.length);
+            if (materialCharID.length >= 4 || materialCharID.length == 0) {
+                $("#loadWaiting").show();
+
+                id = materialCharID; //.toString() + "ş" + inventoryCode.toString();
+                id = id.replace(/\./g, 'ç');
+                id = id + "ğ" + email;
+
+                // arama değeri cache lenir ve sayfa yenilendiğinde yapıştırılır arama çubuğuna
+                var cacheData = materialCharID;
+                localStorage.setItem("XSearchCode", cacheData);
+
+                if (materialCharID != null || materialCharID != "") {
+                    // console.log("console :" + _stockPlace);
+
+                    if (_stockPlace != null && _stockPlace != "") {
+                        // o stok yerine göre arama yaptırılacak
+                        var _collectionFilter = {
+                            "id": id,
+                            "stockplace": _stockPlace
+                        };
+                        //console.log("sss :" + id + "//" + _stockPlace);
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Users/Panel/FilteredSearchedShowMaterials/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "Html",
+                            cache: false,
+                            data: JSON.stringify(_collectionFilter),
+                            success: function (result) {
+                                $("#ListSearchedMaterialDiv").html(result);
+                                // $("#viewMaterialX").html(result);
+                                $("#loadWaiting").hide();
+                            },
+                            error: function (jqXHR, exception) {
+                                console.log(jqXHR);
+                            }
+                        });
+
+                    } else {
+                        var _depo = "";
+                        var _stok = "";
+
+                        var _data = "";
+
+                        if ($("#Include").prop('checked') == true) {
+                            _depo = $("#stockStoreSelect3 > select").find("option:selected").val();
+                            _stok = $("#stockPlaceSelect3 > select").find("option:selected").val();
+                            _data = "ğ" + _depo + "ç" + _stok;
+                        }
+
+                        if (_data != "") {
+                            id = id + _data
+                        }
+
+                        var _colllect = {
+                            "_ware": _depo,
+                            "_stock": _stok,
+                            "_matCode": materialCharID,
+                            "_mail": email
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Users/Panel/SearchedShowMaterialsUser/",// + id,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "Html",
+                            cache: false,
+                            data: JSON.stringify(_colllect),//"{ id: '" + id + "'}",
+                            success: function (result) {
+                                $("#ListSearchedMaterialDiv").html(result);
+                                // $("#viewMaterialX").html(result);
+                                $("#loadWaiting").hide();
+                            },
+                            error: function (jqXHR, exception) {
+                                console.log(jqXHR);
+                            }
+                        });
+
+                    }
+                }
+            };
+        }
+        //}, 1000);
+    };
+
+
+</script>

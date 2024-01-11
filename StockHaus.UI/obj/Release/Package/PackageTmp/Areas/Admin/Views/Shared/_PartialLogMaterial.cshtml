@@ -1,0 +1,103 @@
+﻿@model IPagedList<StockHaus.ModelClass.AdminPage.InventoriesModel>
+@using PagedList
+@using PagedList.Mvc
+@using StockHaus.Core.BaseService
+
+<div class="pagedList" style="float:right;">
+    @{
+        @Html.PagedListPager(Model, id => Url.Action("InventoryLog", new { id = id }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "showLog" })) //, OnBegin = "waiting()"
+    }
+</div>
+
+<table id="tableResult" class="table table-hover table-bordered" style="">
+    <thead style="background-color:rgba(20, 60, 107, 0.84) !important">
+        <tr style="color:white;">
+            <th>SAYIM KODU</th>
+            <th>SAYAN TAKIM</th>
+            <th>MALZEME-INDIS</th>
+            <th>İSMİ</th>
+            <th>ADET</th>
+            <th>DEPO</th>
+            <th>S. YERİ</th>
+            <th>ZAMAN</th>
+        </tr>
+    </thead>
+    <tbody id="showLogMaterial">
+
+        @{
+            ServicePoints point = new ServicePoints();
+
+            var _List = Model.Where(x => x.IsActive).OrderByDescending(z => z.CreateDate).ToList();
+
+            foreach (var item in _List)
+            {
+                string[] _x = item.InventoryCode.Split('X');
+                int team = int.Parse(_x[1]);
+                int group = int.Parse(_x[2]);
+
+                string _xx = "X" + team + "X" + group;
+
+                var _var = point.InventoryService.SearchTeamGroup(_xx);
+
+                List<StockHaus.ModelClass.AdminPage.IGModel> _team = new List<StockHaus.ModelClass.AdminPage.IGModel>();
+
+                if (_var)
+                {
+                    _team = point.InventoryGroupService.TGList(team, group);
+                }
+
+
+                int c = 0;
+                string names = "";
+
+                foreach (var items in _team)
+                {
+                    c = c + 1;
+
+                    if (names == "")
+                    {
+                        names = items.PerName;
+                    }
+                    else
+                    {
+                        names = names + "-" + items.PerName;
+                    }
+
+                    if (c == 2)
+                    {
+                        <tr>
+                            <td>@item.InventoryCode</td>
+                            <td>
+                                @*<a class="logTrace" href="#tableResult" data-toggle="popover4" title="Seçili Kayıt" data-content="@names" style="color:red;font-weight:bold;">|||</a>*@
+                                @names
+                            </td>
+                            <td>
+                                @item.MatCode - @item.MatIndex @*<a class="logTrace" href="#tableResult" data-toggle="popover3" title="Seçili Kayıt" data-content="@item.MatName" style="color:red;font-weight:bold;">|||</a>*@
+                            </td>
+                            <td>@item.MatName</td>
+                            <td>@item.MatQuantity</td>
+                            <td>@item.MatSection</td>
+                            <td>@item.MatSectionPlace</td>
+                            <td>@item.CreateDate</td>
+                        </tr>
+                    }
+                }
+            }
+
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover3"]').popover();
+        $('[data-toggle="popover4"]').popover();
+
+        $(".logTrace").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#tableResult").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+    });
+</script>

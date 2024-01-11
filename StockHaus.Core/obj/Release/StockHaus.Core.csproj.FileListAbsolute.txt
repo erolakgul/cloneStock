@@ -1,0 +1,14 @@
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.Core.dll.config
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.Core.dll
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.Core.pdb
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\EntityFramework.dll
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.Data.dll
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.ModelClass.dll
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.Data.pdb
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\StockHaus.ModelClass.pdb
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\EntityFramework.xml
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\obj\Release\StockHaus.Core.csprojResolveAssemblyReference.cache
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\obj\Release\StockHaus.Core.dll
+C:\Users\erol.akgul\Documents\Visual Studio 2013\Projects\StockHaus_V2\StockHaus.Core\obj\Release\StockHaus.Core.pdb

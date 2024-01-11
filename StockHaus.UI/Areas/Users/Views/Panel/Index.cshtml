@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "Stock HAUS";
+    Layout = "~/Areas/Users/Views/Shared/_LayoutPanel.cshtml";
+}
+
+<div class="col-lg-12">
+    <div id="enterRsltEnvtX" class="col-lg-12 tabcontent">
+        @*@Html.Partial("_PartialEnterMaterial")*@
+    </div>
+
+    @*<div id="viewMaterialX" class="col-lg-12 tabcontent">*@
+    <div id="viewMaterialX" class="col-lg-12">
+        @*<h3>GÖREV YERİ MALZEME BİLGİSİ</h3>*@
+
+        <div id="loadWaiting" class="loader">
+            <img src="/Img/haus.png" style="width:75%;margin-top:33px;margin-left:13px;" />
+        </div>
+        @*_PartialShowMaterials*@
+
+    </div>
+
+    @* İŞ EMRİ MALZEME KAYITEKRANI *@
+    <div id="enterProdInvtX" class="col-lg-12 tabcontent">
+        @*@Html.Partial("_PartialProdInvent")*@
+    </div>
+
+    <div id="viewRsltProdInvtX" class="col-lg-12 tabcontent ">
+
+        @*  _PartialProductionMaterialResult.cshtml controller dan dönen değeri  buraya ajax tan yapıştırırız.   *@
+
+    </div>
+
+    <div id="addMaterialX" class="col-lg-12 tabcontent ">
+        <h3>Görevli Olunan Stok Yerinde Eğer Sayılan Malzeme Yoksa Buradan Kaydedilir</h3>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.Partial("_PartialDefineMaterial")*@
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title text-center" id="myModalLabel">
+                    Malzeme Ekle
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="height:480px;">
+                @model StockHaus.ModelClass.UserPage.EnterMaterial
+
+                @using (Html.BeginForm("DefineMaterial", "Panel", FormMethod.Post, new { @class = "form-group" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-lg-4">
+                        @Html.Label("Malzeme Sayım Tipi")
+                        <div id="inventType" class="input-group">
+                            @Html.TextBoxFor(x => x._matType, new { @class = "form-control", @placeholder = "AD / KG / MT", @type = "text" })  @*, @readonly = "false"*@
+                            @Html.ValidationMessageFor(x => x._matType)
+                        </div>
+                        @Html.Label("Malzeme Adı")
+                        <div id="materialName" class="input-group">
+                            @Html.TextBoxFor(x => x._matName, new { @class = "form-control", @placeholder = "Malzeme Tanımı", @type = "text" })  @*, @readonly = "false"*@
+                        </div>
+                        <span id="rsltMsg" style="color:red;"></span>
+                    </div>
+                    <div id="groupselect" class="col-lg-8">
+                        <div class="col-lg-6">
+                            @Html.Label("Depo")
+                            <div id="aktifDepo" class="input-group">
+                                @Html.TextBoxFor(x => x._stockStore, new { @class = "form-control", @placeholder = "DEPO", @type = "text" })  @*, @readonly = "false"*@
+                                @Html.ValidationMessageFor(x => x._stockStore)
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            @Html.Label("Stok Yeri")
+                            <div id="aktifStokYeri" class="input-group">
+                                @Html.TextBoxFor(x => x._stockPlace, new { @class = "form-control", @placeholder = "STOK YERİ", @type = "text" }) @*  , @onkeyup = "ApproveStockPlace()", @readonly = "true" çıkarıldı *@
+
+                                @Html.ValidationMessageFor(x => x._stockPlace)
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            @Html.Label("Malzeme Kodu")
+                            <div id="matCode" class="input-group" style="margin-top:5px;">
+                                @Html.TextBoxFor(x => x._mCode, new { @class = "form-control", @placeholder = "Malzeme Kodu", @type = "text", @id = "materialNumber" })  @*@onkeyup = "GetMaterialCode()"*@
+                                @Html.ValidationMessageFor(x => x._mCode)
+                            </div>
+                        </div><br />
+                        <div class="col-lg-6">
+                            @Html.Label("Indıs No")
+                            <div id="matCode" class="input-group" style="margin-top:5px;">
+                                @Html.TextBoxFor(x => x._matIndex, new { @class = "form-control", @placeholder = "* / A / A-N17045040 / B", @type = "text", @id = "materialIndis" })
+                                @Html.ValidationMessageFor(x => x._matIndex)
+                            </div>
+                        </div><br />
+                        <div class="col-lg-6">
+                            @Html.Label("Özel Stok")
+                            <div id="matSpecSt" class="input-group" style="margin-top:5px;">
+                                @Html.TextBoxFor(x => x._matSpecial, new { @class = "form-control", @placeholder = "* VEYA 2", @type = "text" })
+                                @Html.ValidationMessageFor(x => x._matSpecial)
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            @Html.Label("Malzeme Miktarı")
+                            <div id="matQuantity" class="input-group" style="margin-top:5px;">
+                                @Html.TextBoxFor(x => x._quantity, new { @class = "form-control", @placeholder = "AD 12/KG 12,7/MT 2,75", @type = "text" })
+                                @Html.ValidationMessageFor(x => x._quantity)
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            @Html.Label("Malzeme Seri Numarası")
+                            <div id="matSerno" class="input-group" style="margin-top:5px;margin-bottom:80px;">
+                                @Html.TextBoxFor(x => x._matSeriNum, new { @class = "form-control", @placeholder = "ELP46012 / N17060356 / 1254635856 ", @type = "text" })
+                            </div>
+                        </div><br />
+                        <div class="input-group">
+                            <input id="btnMaterialSave" type="submit" name="btnLogin" value="Malzemeyi KAYDET" class="btn btn-block" />
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<span id="createGroupResult" style="display:none;">@ViewBag.Basarili</span>
+<span id="viewbagMaterial" style="display:none;">@ViewBag.Material</span>
+<span id="viewbagDefMat" style="display:none;">@ViewBag.DefMat</span>
+
+<script>
+    $(document).ready(function () {
+
+        $("#myModalLabel").text("Malzeme Ekle");
+        $("#matSerno > input").blur(function () {
+            if ($("#matSerno > input").val().length > 0) {
+                $("#matQuantity > input").val("1.0");
+                $("#matQuantity > input").attr("disabled", "disabled");
+            } else {
+                $("#matQuantity > input").removeAttr('disabled');
+            }
+        });
+
+        var _addMatRslt = $("#viewbagDefMat").text();
+
+        if (_addMatRslt == "TipFalse") {
+            swal("", "Malzeme Tipi AD/MT/KG olmalı", "warning");
+        } else if (_addMatRslt == "Success") {
+            swal("", "Malzeme Kaydedildi, Sayım İşleminize devam edebilirsiniz.", "success");
+        } else if (_addMatRslt == "Warning") {
+            swal("", "Malzeme Kaydedilemedi.", "warning");
+        } else if (_addMatRslt == "Empty") {
+            swal("", "Boş Bırakılan Alanlar Var !", "error");
+        } else if (_addMatRslt == "StockPlace") {
+            swal("", "Girilen Stok Yeri o depo için Tanımlı Değil", "error");
+        } else if (_addMatRslt == "WareHouse") {
+            swal("", "Girilen Depo Yeri,sistemde tanımlı değil..", "error");
+        } else if (_addMatRslt == "Full") {
+            swal("", "Girdiğiniz, malzeme kodu-indisi-seri numarası-özel stok bilgisi sistemde var", "error");
+        };
+
+    });
+</script>

@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Stock HAUS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model StockHaus.ModelClass.LoginService.ViewModel.LoginModel
+@using System.Web.Optimization
+
+
+@*  otantike kullanıcı yoksa yönelecek olunan login ekran tasarımı  *@
+
+<div class="row">
+    <span id="rsltLogin" style="display:none;">@ViewBag.Login</span>
+
+    <div class="col-lg-4 col-xs-2"></div>
+    <div class="col-lg-4 col-xs-8">
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
+                @*<h2 class="active"> Oturum Aç </h2>*@
+                <img src="~/Img/lgMr.png" class="img-responsive" style="width:46%;margin-top:1%;margin-left: 25%;" />
+                <div class="fadeIn first">
+                    <img src="~/Img/userr.png" id="icon" alt="User Icon" />
+                </div>
+                @using (Html.BeginForm(new { @class = "" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.TextBoxFor(x => x.Email, new { @class = "fadeIn second", @placeholder = "Email", @type = "text" })
+
+                    @Html.TextBoxFor(x => x.Password, new { @class = "fadeIn third", @placeholder = "Password", @type = "password" })
+                    <input id="lgnSubmit" type="submit" class="fadeIn fourth" style="margin-top:20px;" value="Giriş Yap">
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-xs-2"></div>
+</div>

@@ -1,0 +1,215 @@
+﻿@{
+    ViewBag.Title = "Stock HAUS";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPanel.cshtml";
+}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12" style="margin-top:18px;">
+            <div class="tab">
+                <button class="tablinks" onclick="openTop(event, 'createTeamX',1)">EKİP OLUŞTUR</button>
+                <button class="tablinks" onclick="openTop(event, 'teamShowX',2)">EKİP GÖRÜNTÜLE</button>
+                <button class="tablinks" onclick="openTop(event, 'teamAssignX',5)">EKİP GÖREVLENDİR</button>
+                <button class="tablinks" onclick="openTop(event, 'watchEnvtX',3)">SAYIM İZLE</button>
+                <button class="tablinks" onclick="openTop(event, 'addDataX',4)">VERİ EKLE</button>
+                <button class="tablinks" onclick="openTop(event, 'manage',10)">KULLANICILARI YÖNET</button>
+                <button class="tablinks" onclick="openTop(event, 'takeResult',20)">SAYIM SONUÇ BELGİSİNİ AL</button>
+            </div>
+
+            <div id="createTeamX" class="col-lg-12 tabcontent" style="margin-top:20px;">
+                <div class="col-lg-3">
+                    @Html.Label("Personel Seç")
+                    <ul id="estimatedPersonalName"></ul>
+                </div>
+                <div id="ctInterface" class="col-lg-9">
+
+                </div>
+            </div>
+
+            <div id="teamShowX" class="tabcontent">
+                <h3>EKİP GÖRÜNTÜLE</h3>
+                <table class="table table-hover table-bordered">
+                    <thead style="background-color:white !important;color:black;">
+                        <tr>
+                            <th>TEAM NO</th>
+                            <th>GROUP NO</th>
+                            <th>PERSONEL</th>
+                            <th>GÖREVİ</th>
+                            <th>GÖREV YERİ</th>
+                            <th>Son Raf</th>
+                            <th>PASİFE ÇEK</th>
+                        </tr>
+                    </thead>
+                    <tbody id="getGroupTeam">
+                        @* partialteamgroup *@
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="teamAssignX" class="col-lg-12 tabcontent">
+                <div class="col-lg-2">
+
+                </div>
+                <div id="atInterface" class="col-lg-10">
+
+                </div>
+            </div>
+
+            <div id="watchEnvtX" class="tabcontent">
+                <h3>SAYIM İZLE</h3>
+                <p></p>
+            </div>
+
+            <div id="addDataX" class="tabcontent">
+                <h3>VERİ EKLE</h3>
+                <p></p>
+            </div>
+
+            <div id="manage" class="tabcontent">
+                <h3>Kullanıcı Durumları</h3>
+                <table class="table table-hover table-bordered">
+                    <thead style="background-color:white !important;color:black;">
+                        <tr>
+                            <th>PERSONEL</th>
+                            <th>STATU</th>
+                            <th>PASİFE ÇEK</th>
+                        </tr>
+                    </thead>
+                    <tbody id="getPersonelStatus">
+                        @* _partialpersonelstatus *@
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="takeResult" class="tabcontent">
+                <h3>Sonuçları Al</h3>
+                <div class="col-lg-12">
+
+                    @model StockHaus.ModelClass.AdminPage.WareStock
+                    @using (Html.BeginForm("GetExcel", "Panel", FormMethod.Post, new { @class = "form-group" }))
+                    {
+                        @Html.AntiForgeryToken()
+    
+                        <div class="col-lg-3">
+                            @Html.Label("Depo")
+                            @Html.TextBoxFor(x => x._ware, new { @class = "form-control", @placeholder = "Depo", @type = "text" })
+                        </div>
+    
+                        <div class="col-lg-3">
+                            @Html.Label("Stok Yeri")
+                            @Html.TextBoxFor(x => x._stock, new { @class = "form-control", @placeholder = "Stok Yeri", @type = "text" })
+                        </div>
+                        <div class="col-lg-3">
+                            <input id="btnExcel" class="btn btn-block btn-primary" type="submit" value="EXCEL E AKTAR" style="margin-top: 15%;" />
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<span id="createGroupResult" style="display:none;">@ViewBag.Assign</span>
+<span id="msg" style="display:none">
+    @ViewBag.Error
+</span>
+
+<script>
+
+    function openTop(evt, cityName, no) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+        if (no == 1) {
+            createTeam();
+        }
+        else if (no == 2) {
+            viewTeam();
+        } else if (no == 3) {
+            window.open("/Admin/Trace");
+        } else if (no == 4) {
+            window.open("/Admin/Add");
+        } else if (no == 5) {
+            assignTeam();
+            //EKİP GÖREVLENDİR
+        } else if (no == 10) {
+            checkStatusOfPersonel();
+        };
+    }
+
+    $(document).ready(function () {
+        // CREATE TEAM sonrası hata mesajları
+        var ms = $("#msg").text().trim();
+        if (ms == "true") {
+            swal("", "Eklendi", "success");
+        } else if (ms == "false") {
+            swal("", "Sorun Oluştu", "error");
+        } else if (ms == "İsimYok") {
+            swal("", "Öyle bir kişi kayıtlı değil", "error");
+        } else if (ms == "ikikisi") {
+            swal("", "Bu takıma ait grup Zaten 2 kişi", "error");
+        } else if (ms == "aktif") {
+            swal("", "Bu personel başka grupta aktif", "error");
+        } else if (ms == "aynı") {
+            swal("", "Görev bilgisini değiştiriniz.", "error");
+        } else if (ms == "problem") {
+            swal("", "Rol güncellenemedi", "error");
+        };
+
+        // ASSIGN TEAM SONRASI hata mesajları
+        var msg = $("#createGroupResult").text().trim();
+        if (msg == "Boş") {
+            swal("", "Boş veri var", "error");
+        } else if (msg == "TekrarKayıt") {
+            swal("", "Sayım kodunda tekrar var !", "error");
+        } else if (msg == "Sayılmış") {
+            swal("", "Bu deponun sayımı yapılmış!", "error");
+        } else if (msg == "Tamamlandı") {
+            swal("", "Başarıyla atandı..", "success");
+        } else if (msg == "Yapılamadı") {
+            swal("", "Birşeyler ters gitti.", "error");
+        } else if (msg == "TekrarKayıt2") {
+            swal("", "O depo ve stok yeri arasına atama yapılmış daha önce", "error");
+        };
+
+    });
+
+    //$("#btnExcel").click(function () {
+    //    var _depo = $("#ware").val();
+    //    var _stok = $("#stock").val();
+
+    //    var collect = {
+    //        "_ware": _depo,
+    //        "_stock": _stok
+    //    };
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Admin/Panel/GetExcel/",
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "file",
+    //        cache: false,
+    //        data: JSON.stringify(_collect),//"{ id: '" + id + "'}",
+    //        success: function (result) {
+    //            swal("","Belge Hazırlandı..","success");
+    //        },
+    //        error: function (jqXHR, exception) {
+    //            console.log(jqXHR);
+    //        }
+    //    });
+
+    //});
+
+</script>

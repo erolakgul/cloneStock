@@ -1,0 +1,145 @@
+﻿@model ICollection<StockHaus.ModelClass.AdminPage.IGModel>
+@using StockHaus.Core.BaseService
+
+@{
+    var list = Model.Where(x => x.IsActive).OrderByDescending(c => c.GroupNo).ThenByDescending(p => p.TeamNo).ToList();
+    int count = 0;
+}
+
+
+@foreach (var item in list)
+{
+    string teamgroup = item.TeamNo + "X" + item.GroupNo;
+
+    ServicePoints point = new ServicePoints();
+
+    var anyIs = point.StoreService.AllStoreID(item.StoreID);
+
+    string depostok = "";
+    foreach (var items in anyIs)
+    {
+        depostok = items.WareHouse + "X" + items.StockPlace;
+    }
+
+    string inventcode = depostok + "X" + teamgroup;
+
+    bool varMi = point.InventoryService.AllInvent(inventcode); 
+
+    if (varMi)
+    {
+        count = count + 1;
+
+        if (count <= 2)
+        {
+            <tr style="background-color:rgba(0, 0, 0, 0.4);color:white">
+                <td>@item.TeamNo</td>
+                <td>@item.GroupNo</td>
+                <td>@item.PerName</td>
+                @if (item.MissionStatu == 1)
+                {
+                    <td>YAZICI</td>
+                }
+                else
+                {
+                    <td>SAYICI</td>
+                }
+                @*<td>@item.Stores.WareHouse - @item.Stores.StockPlace </td>*@
+
+                @{
+
+            if (item.StoreID == 1)
+            {
+                <td> ATAMASI YOK </td>
+            }
+            else
+            {
+
+                var warehouse = point.StoreService.SelectWareStock(item.StoreID);
+                <td> @warehouse._ware - @warehouse._stock </td>
+            }
+                }
+                <td>@item.EndStockPlace</td>
+                <td id="sil"> <a href="#showGroups" onclick="sil(@item.ID)" style="text-decoration:none;font-size:20px;font-weight:bold;color:red" title="Personeli Gruptan Al">  X  </a>  </td>
+            </tr>
+        }
+        else
+        {
+            <tr style="background-color:rgba(0, 0, 0, 0.7);color:white;">
+                <td>@item.TeamNo</td>
+                <td>@item.GroupNo</td>
+                <td>@item.PerName</td>
+                @if (item.MissionStatu == 1)
+                {
+                    <td>YAZICI</td>
+                }
+                else
+                {
+                    <td>SAYICI</td>
+                }
+
+                @{
+            if (item.StoreID == 1)
+            {
+                <td> ATAMASI YOK </td>
+            }
+            else
+            {
+                var warehouse = point.StoreService.SelectWareStock(item.StoreID);
+                <td> @warehouse._ware - @warehouse._stock </td>
+            }
+                }
+                <td>@item.EndStockPlace</td>
+                <td id="sil"> <a href="#" onclick="sil(@item.ID)" style="text-decoration:none;font-size:20px;font-weight:bold;color:red" title="Personeli Gruptan Al">  X  </a>  </td>
+            </tr>
+            if (count == 4)
+            {
+                count = 0;
+            }
+        }
+    }
+    else
+    {
+        <tr>
+            <td>@item.TeamNo</td>
+            <td>@item.GroupNo</td>
+            <td>@item.PerName</td>
+            @if (item.MissionStatu == 1)
+            {
+                <td>YAZICI</td>
+            }
+            else
+            {
+                <td>SAYICI</td>
+            }
+
+            @{
+        if (item.StoreID == 1)
+        {
+            <td> ATAMASI YOK </td>
+        }
+        else
+        {
+            var warehouse = point.StoreService.SelectWareStock(item.StoreID);
+            <td> @warehouse._ware - @warehouse._stock </td>
+        }
+}
+            <td>@item.EndStockPlace</td>
+            <td id="sil"> <a href="#" onclick="sil(@item.ID)" style="text-decoration:none;font-size:20px;font-weight:bold;color:red" title="Personeli Gruptan Al">  X  </a>  </td>
+        </tr>
+    }
+
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#sil").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#showGroups").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+    });
+</script>

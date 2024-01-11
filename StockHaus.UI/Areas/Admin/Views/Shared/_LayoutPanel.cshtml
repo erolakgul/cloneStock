@@ -1,0 +1,77 @@
+﻿@using System.Web.Optimization
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="stok sayım uygulaması">
+    <meta name="author" content="erol akgül">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="~/logo.ico" />
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+    <!-- CSS -->
+    @Styles.Render("~/Areas/Admin/Content/css")
+    @Styles.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/themes/base/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    <script src="~/Scripts/Sweet/sweetalert-dev.js"></script>
+    <script src="~/Areas/Admin/Scripts/Site.js"></script>
+
+</head>
+<body>
+    <nav id="main" class="navbar navbar-default" >
+        <div class="container-fluid">
+            <div class="navbar-header" >
+                <div id="item-header">
+                    <a class="navbar-brand" href="/Admin/Panel">
+                        <img class="img-responsive" src="~/Img/logoP.png" />
+                    </a>
+                </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu1">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="menu1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a id="user" href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top:4px;">
+                            <span style="font-weight:bold;font-size:16px;font-family:'Myriad Pro';" id="userNamed">
+                                @Session["Email"].ToString()
+                            </span>  @*HttpContext.Current.User.Identity.Name*@
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dm_Menu">
+                            <li>
+                                <a href="~/Admin/Panel/SignOut"><i class="fa fa-fw fa-power-off"></i> Çıkış Yap</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <!-- default-->
+        <div class="row">
+            @RenderBody()
+        </div>
+    </div>
+    @*footer*@
+    @*<nav class="navbar navbar-default navbar-fixed-bottom" style="min-height:20px; background-color:#484e55;border-color:#484e55;">
+            <div class="container-fluid" style="height:auto" align=center>
+                <span class="copyright " style="text-align:center;font-size:13px;">
+                    <small style="color:#fff;">© 2016 HAUS Santrifüj Teknolojileri - developer:<a href="http://www.erolakgul.wordpress.com/" target="_blank"> erolakgül</a></small>
+                </span>
+            </div>
+        </nav>*@
+</body>
+</html>

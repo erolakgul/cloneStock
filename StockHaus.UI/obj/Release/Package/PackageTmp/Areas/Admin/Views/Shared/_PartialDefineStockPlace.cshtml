@@ -1,0 +1,40 @@
+﻿@model StockHaus.ModelClass.AdminPage.DefineStores
+
+@using (Html.BeginForm("DefineStore", "Add", new { @class = "form-group" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-lg-4">
+
+    </div>
+    <div id="groupselect" class="col-lg-8">
+        <div class="col-lg-6">
+            @Html.Label("Firma")
+            <div id="aktifDepo" class="input-group">
+                @Html.TextBoxFor(x => x._company, new { @class = "form-control", @placeholder = "Firma", @type = "text" })  @*, @readonly = "false"*@
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="aktifStokYeri" class="input-group">
+                @Html.Label("Depo Gir")
+                @Html.TextBoxFor(x => x._wareHouse, new { @class = "form-control", @placeholder = "Depo", @type = "text", @onkeyup = "ApproveStockPlace()"}) @*  ,  , @readonly = "true" çıkarıldı *@
+            </div>
+        </div>
+        <div class="col-lg-6">
+            @Html.Label("Malzeme Stok Yeri")
+            <div id="matCode" class="input-group" style="margin-top:5px;">
+                @Html.TextBoxFor(x => x._stockPlace, new { @class = "form-control", @placeholder = "Stok Yeri", @type = "text", @id = "materialNumber", @onkeyup = "GetMaterialCode()" })
+            </div>
+        </div><br />
+        <div class="col-lg-6">
+            @Html.Label("Stok Yeri Açıklaması")
+            <div id="matCode" class="input-group" style="margin-top:5px;margin-bottom:25px;">
+                @Html.TextBoxFor(x => x._description, new { @class = "form-control", @placeholder = "Açıklama", @type = "text", @id = "materialIndis" })
+            </div>
+        </div><br />
+        <div class="col-lg-12" style=" margin-top: 27px">
+            <div class="input-group">
+                <input id="btnMaterialSave" type="submit" name="btnLogin" value="Depo / Stok Yerini KAYDET" class="btn btn-block" />
+            </div>
+        </div>
+    </div>
+}

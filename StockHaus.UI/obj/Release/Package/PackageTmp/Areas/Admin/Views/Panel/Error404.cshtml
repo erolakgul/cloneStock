@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Error404";
+    //Layout = "~/Areas/Admin/Views/Shared/_LayoutPanel.cshtml";
+}
+
+@using System.Web.Optimization
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="stok sayım uygulaması">
+    <meta name="author" content="erol akgül">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="~/logo.ico" />
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+    <!-- CSS -->
+    @Styles.Render("~/Areas/Admin/Content/css")
+    @Styles.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/themes/base/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="~/Scripts/Sweet/sweetalert-dev.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var tt = $("#catchError").text();
+
+            swal({
+                title: tt,
+                text: "URL inizi Kontrol Ediniz Lütfen",
+                timer: 4000,
+                type: "warning",
+                showConfirmButton: false
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12" style="margin-top:10px;">
+                <div class="col-lg-6 col-lg-offset-3" style="margin-top:5%;text-align:center;">
+                    <h2>Aradığınız Sayfayı Kontrol Ediniz Lütfen</h2>
+                </div>
+                <div class="col-lg-6 col-lg-offset-3" style="margin-top:5%;text-align:center;">
+                    <h2>Please,Check Page You Searched</h2>
+                    <p id="catchError" style="display:none;">@ViewBag.Search</p>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="margin-top:50px;">
+                <div class="col-lg-4">
+                    @*<div class="img-thumbnail" style="height:250px;">
+                            <img class="img-responsive" src="~/Slider/DMV4743.jpg" />
+                        </div>*@
+                </div>
+                <div class="col-lg-4">
+                    <a href="/"> <img class="img-responsive" src="~/Img/HAUSIT.png" /></a>
+                </div>
+                <div class="col-lg-4">
+                    @*<div class="img-thumbnail" style="height:250px;">
+                            <img class="img-responsive" src="~/Slider/VBA5433P40.jpg" />
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

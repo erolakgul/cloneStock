@@ -1,0 +1,66 @@
+﻿@model StockHaus.ModelClass.AdminPage.CreateGroups
+
+@using (Html.BeginForm("CreateGroup", "Panel", new { @class = "form-group" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-lg-4">
+        @Html.Label("Ekip Seç")
+        <div id="teamselect" class="input-group">
+            @Html.DropDownListFor(x => x._teamNo, null, htmlAttributes: new { @class = "form-control", @onclick = "selectLastGroupNo()" })
+        </div>
+        <br /><br />
+        <div id="not" style="margin-top: 20px;">
+            <a class="adminPop" href="#createTeam" data-toggle="popover5" title="Seçili Kayıt" data-content="Grup Numarası Default Olarak Sistem Tarafından Atanır.
+
+             Daha önce oluşturulmuş bir gruptan birini atıp yerine
+             başka bir kişiyi eklemek istemeniz dışında textbox a
+             müdahale etmenize gerek yoktur." style="color:chartreuse;font-weight:bold;">Geliştirici Notu !</a>
+        </div>
+        <br /><br />
+    </div>
+    <div id="groupselect" class="col-lg-7">
+        @Html.Label("Grubu Tamamla")
+        <div id="enterGroupNo" class="input-group">
+            @Html.TextBoxFor(x => x._groupNo, new { @class = "form-control", @placeholder = "Grup Numarası        -- 1 / 2 / 11 gibi", @type = "text" })
+        </div>
+        <br />
+        @*@Html.Label("Etiket Seçimi")*@
+        <div class="input-group" id="perName">
+            @*@Html.ValidationMessageFor(model => model._perName, "", new { @class = "text-danger" })*@
+            @Html.TextBoxFor(x => x._perName, new { @class = "form-control", @placeholder = "Personel Adı Soyadı -- erol akgül / EROL AKGÜL gibi", @type = "text", @id = "personalName", @onkeyup = "GetPersonalName()" })
+
+        </div><br />
+
+        <div id="missionSelect" class="input-group">
+            @Html.DropDownListFor(x => x._missionStatus, null, htmlAttributes: new { @class = "form-control" })
+        </div>
+        <br />
+        <div class="input-group">
+            <input id="btnLogin" type="submit" name="btnLogin" value="Ekibe / Gruba Personeli KAYDET" class="btn btn-block" />
+        </div>
+    </div>
+}
+
+<script>
+
+    $(document).ready(function () {
+       
+
+        $(".adminPop").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#createTeamX").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+            $('[data-toggle="popover5"]').popover();
+        });
+
+        // ekrana gelen tahmini personel listesindeki isimlere tıklayınca çalışacak olan event
+        $("ul#estimatedPersonalName").click(function (event) {
+            var target = getEventTarget(event);
+            $("#perName > input").val(target.innerHTML);
+            $("#estimatedPersonalName > li").remove();
+        });
+
+    });
+
+</script>

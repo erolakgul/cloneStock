@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "Stock HAUS - Envanter İzleme";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutTrace.cshtml";
+}
+
+<div class="col-lg-12">
+    <div class="tab">
+        @*<button class="tablinks" onclick="openTop(event, 'envtOldInvent',5)">Eski Sayımlar</button>*@
+        <button class="tablinks" onclick="openTop(event, 'envtLog',1)">SAYIM LOGLARI</button>
+        <button class="tablinks" onclick="openTop(event, 'teamShowX',2)">SAYIM TAMAMLANMA YÜZDELERİ</button>
+        <button class="tablinks" onclick="openTop(event, 'envtAppStoreX',4)">ONAYLANMIŞ MALZEMELER</button>
+        @*<button class="tablinks" onclick="openTop(event, 'teamAssignX',3)">İŞ EMRİ SAYIM SONUCU</button>*@
+        <button class="tablinks" onclick="openTop(event, 'envtStoreX',3)">DEPO SAYIM ONAYLAMA</button>
+    </div>
+
+    <div id="envtOldInvent" class="col-lg-12 tabcontent">
+        <div id="showOld">
+
+        </div>
+    </div>
+
+    <div id="envtLog" class="col-lg-12 tabcontent">
+        <div id="showLog">
+            @* dönen _PartialLogMaterial partial view ü ajax ın success inde buraya gömülür.*@
+        </div>
+    </div>
+
+    <div id="teamShowX" class="col-lg-12 tabcontent" style="margin-top:10px;">
+        <h3>SAYIM TAMAMLANMA YÜZDELERİ</h3>
+        <table id="tableResult" class="table table-hover table-bordered" style="">
+            <thead style="background-color:rgba(20, 60, 107, 0.84) !important">
+                <tr style="color:white;">
+                    <th>SIRA</th>
+                    <th>DEPO</th>
+                    <th>STOK YERİ</th>
+                    <th>SAYIM TAMAMLANMA YÜZDESİ</th>
+                    <th>SAYIM ONAYLANMA YÜZDESİ</th>
+                </tr>
+            </thead>
+            <tbody id="showCompletePercent">
+                @* dönen _PartialCompletePercent partial view ü ajax ın success inde buraya gömülür.*@
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="teamAssignX" class="col-lg-12 tabcontent">
+        <div id="resultProdInvent" style="margin-top:30px;">
+            @*   controller dan dönen değeri  buraya ajax tan yapıştırırız.   *@
+        </div>
+    </div>
+
+    <div id="envtAppStoreX" class="col-lg-12 tabcontent">
+        <div id="rsltApprovedMat">
+            @*style="margin-top:30px;"*@
+            @*   _PartialAppRsltShow controller dan dönen değeri  buraya ajax tan yapıştırırız.   *@
+        </div>
+    </div>
+
+    <div id="envtStoreX" class="col-lg-12 tabcontent">
+        <div id="fillApp">
+            @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("_PartialChooseWarehouse")*@
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#traceshowLog").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#showLog").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        $("#traceshowPercentage").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#showPercentage").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+
+        $("#traceresultProdInvent").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#resultProdInvent").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+    });
+
+    function openTop(evt, cityName, no) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+        if (no == 1) {
+            inventLog();
+        } else if (no == 2) {
+            //window.location.href = "/Users/Trace";
+            showPercentResult();
+        } else if (no == 3) { // iş emri sayım girişi
+            //aProdResultTrace();
+            // depo sayım onaylama scripti
+            wareApprovePage();
+        } else if (no == 4) {
+            showApproveMaterial(); //rsltApprovedMat
+        }
+    };
+
+</script>
+
+

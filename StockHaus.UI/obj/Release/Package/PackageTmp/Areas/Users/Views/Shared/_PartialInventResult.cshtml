@@ -1,0 +1,291 @@
+﻿@using PagedList
+@using PagedList.Mvc
+
+@model IPagedList<StockHaus.ModelClass.AdminPage.InventoriesModel>
+
+@{
+    ICollection<StockHaus.ModelClass.AdminPage.InventoriesModel> list = null;
+
+    if (Model != null)
+    {
+        list = Model.OrderByDescending(c => c.MatSection).ThenByDescending(p => p.MatSectionPlace).ThenByDescending(p => p.CreateDate).ToList();
+    }
+
+}
+<div id="loadWaiting2" class="loader">
+    <img src="~/Areas/Users/Image/haus.png" style="width:75%;margin-top:33px;margin-left:13px;" />
+</div>
+<form>
+    <input id="search" type="text" name="search" placeholder="en az 4 nümerik karakter.." onkeyup="">
+</form>
+
+<div class="pagedList" style="float:right;">
+
+    @{
+        //var depo = Model.Select(x => x.MatSection).FirstOrDefault();
+        //var stokyeri = Model.Select(x => x.MatSectionPlace).FirstOrDefault();
+        //var belgeID = depo + "X" + stokyeri;
+        string strName = Session["Email"].ToString();
+        var belgeID = strName;//.Replace('.', 'ş');
+
+        if (Model != null)
+        {
+            @Html.PagedListPager(Model, id => Url.Action("AccountedList", new { id = belgeID + "-" + id }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "inventResult", OnBegin = "waitingMat()" }))
+        }
+
+    }
+
+</div>
+
+<table id="materialList" class="table table-hover animate-bottom" style="margin-top:20px;">
+    <thead>
+        <tr style="background-color:white;color:black;font-weight:bold;">
+            <th>SAYIM NO</th>
+            <th>MALZEME NO</th>
+            <th>INDIS</th>
+            <th>SERİNO</th>
+            <th>MALZEME</th>
+            <th>MİKTAR</th>
+            <th>DEPO</th>
+            <th>S. YERİ</th>
+            <th>Sil / Güncelle</th>
+        </tr>
+    </thead>
+    <tbody id="getInventResult">
+        @* table burada oluşturulacak,@model den gelen veri burada foreach ile doldurulacak *@
+
+        @if (list != null)
+        {
+            foreach (var item in list)
+            {
+                string className = "cls" + item.ID;
+
+                <tr class="@className">
+                    <td>@item.InventoryCode</td>
+                    <td>@item.MatCode</td>
+                    <td>@item.MatIndex</td>
+                    <td>
+                        @item.MatSerialNumber
+                    </td>
+                    <td>
+                        @item.MatName
+                    </td>
+                    <td>@item.MatQuantity</td>
+                    <td>@item.MatSection</td>
+                    <td>@item.MatSectionPlace</td>
+                    <td id="delMatX">
+                        <a class="delete" href="#materialList" onclick="delMat(@item.ID)"><img src="~/Areas/Users/Image/red.png" style="max-width:20px !important" title="Malzemeyi Sil" /></a>
+                        <a class="update" href="#materialList" onclick="updMat(@item.ID)"><img src="~/Areas/Users/Image/pen.png" style="max-width:30px !important;margin-left:10px;" title="Malzeme Adedi Değiştir" /></a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+<div id="dialog-message" title="Malzeme Güncelleme">
+    <div style="margin-left: 23px;">
+        @*<form>*@
+        <fieldset>
+            <label for="name">İndis  :</label>
+            <input type="text" name="name" id="indisData" value="" class="text ui-widget-content ui-corner-all" style="float:right;margin-top:5%;">
+            <label for="name">Seri No:</label>
+            <input type="text" name="text" id="serialNumData" value="" class="text ui-widget-content ui-corner-all" style="float:right;margin-top:5%;">
+            <label for="name">Adet   :</label>
+            <input type="text" name="text" id="adetData" value="" class="text ui-widget-content ui-corner-all" style="float:right;margin-top:5%;">
+            <input type="text" name="text" id="dbIdNumber" value="" class="text ui-widget-content ui-corner-all" style="float:right;margin-top:5%;display:none;">
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+            <input type="button" id="submitData" tabindex="-1" value="Güncelle" style="margin-left: 70%;margin-top: 5%;width:100px;">
+        </fieldset>
+        @*</form>*@
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        var getCacheSearchCode = localStorage.getItem("XSearchCode");
+
+        // cache lenmiş data
+        //$("input#search").val(getCacheSearchCode);
+
+        $(".delete").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#materialList").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+        $(".update").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#materialList").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        $(".rsltPop").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#getInventResult").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        $("#search").keyup(function (){
+            GetMaterialCodeForUpdate();
+        });
+
+
+        // inputa girilen değerin büyütülmesi
+        $("#indisData").bind('keyup', function (e) {
+            if (e.which >= 97 && e.which <= 122) {
+                var newKey = e.which - 32;
+                // I have tried setting those
+                e.keyCode = newKey;
+                e.charCode = newKey;
+            };
+            $("#indisData").val(($("#indisData").val()).toUpperCase());
+        });
+
+        $("#serialNumData").bind('keyup', function (e) {
+            if (e.which >= 97 && e.which <= 122) {
+                var newKey = e.which - 32;
+                // I have tried setting those
+                e.keyCode = newKey;
+                e.charCode = newKey;
+            };
+            $("#serialNumData").val(($("#serialNumData").val()).toUpperCase());
+        });
+
+
+    });
+
+    //////////////////// dialog
+
+
+    $(function () {
+        $("#dialog-message").dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: true,
+            resizable: true,
+            position: ['center', 'top'],
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            },
+            width: 400,
+            left:600,
+            top:200,
+            dialogClass: 'ui-dialog-osx'
+            //,
+            //buttons: {
+            //    "I've read and understand this": function () {
+            //        $(this).dialog("close");
+            //    }
+            //}
+        });
+
+        //$(".update").on("click", function () {
+        //    $("#dialog-message").dialog("open");
+        //});
+    });
+
+    /////////////////// dialog
+
+    // pre estimated
+    setInterval(function () {
+        var ssid = $("#search").val();
+        if (ssid == null || ssid == "") {
+            $("#inventResult > table#searchList").remove();
+        }
+    }, 1000);
+
+    function GetMaterialCodeForUpdate() {
+        var materialCharID = '';
+        var id = '';
+        var inventoryCode = $("#getInventResult > tr > td:first").text();
+        console.log("invent" + inventoryCode);
+        //setInterval(function () {
+        if ($("#search").val() != materialCharID) {
+            materialCharID = $("#search").val();
+
+            // 4 karakter girildikten sonra sıralasın
+            if (materialCharID.length >= 4) {
+                $("#loadWaiting2").show();
+
+                id = materialCharID.toString() + "ş" + inventoryCode.toString();
+                id = id.replace(/\./g, 'ç');
+
+                // arama değeri cache lenir ve sayfa yenilendiğinde yapıştırılır arama çubuğuna
+                var cacheData = materialCharID;
+                localStorage.setItem("XSearchCode", cacheData);
+
+                if (materialCharID != null || materialCharID != "") {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Users/Panel/SearchMaterial/" + id,
+                        //contentType: "application/json; charset=utf-8",
+                        dataType: "Html",
+                        cache: false,
+                        data: "{ id: '" + id + "'}",
+                        success: function (result) {
+                            $("#inventResult").html(result);
+                            $("#loadWaiting2").hide();
+                        },
+                        error: function (jqXHR, exception) {
+                            console.log(jqXHR);
+                        }
+                    });
+                }
+            }
+
+        }
+        //}, 1000);
+    };
+
+
+    $("#submitData").click(function () {
+
+        var _indis = $("#indisData").val();
+        var _seriNo = $("#serialNumData").val();
+        var _adet = $("#adetData").val();
+        var _dbId = $("#dbIdNumber").val();
+
+        var dataY = [];
+        dataY.push(_dbId);
+        dataY.push(_adet);
+        dataY.push(_seriNo);
+        dataY.push(_indis);
+
+        var dataX = _dbId + "X" + _adet + "X" + _seriNo + "X" + _indis;
+
+        $.ajax({
+            type: "POST",
+            url: "/Users/Panel/UpdMaterial/" + dataY,
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            cache: false,
+            data: "{ id: '" + dataY + "'}",
+            success: function (result) {
+                a7();
+                swal("Başarılı", "Girdiğiniz Değerler Yansıtıldı ", "success");
+                $("#dialog-message").dialog("close");
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                ////alert(msg);
+                console.log(jqXHR);
+            }
+        });
+
+    });
+
+</script>

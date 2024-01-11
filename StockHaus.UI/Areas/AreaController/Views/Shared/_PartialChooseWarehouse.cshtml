@@ -1,0 +1,36 @@
+﻿@model StockHaus.ModelClass.AdminPage.WareStock
+
+@using (@Ajax.BeginForm("GetListMaterial", "Panel", new AjaxOptions { UpdateTargetId = "fillMaterials", InsertionMode = InsertionMode.Replace }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-lg-2">
+            @Html.Label("Depo")
+            <div id="stockStoreSelect" class="input-group">
+                @Html.DropDownListFor(x => x._ware, null, htmlAttributes: new { @class = "form-control", @onchange = "FillStockPlace()" })
+            </div>
+        </div>
+        <div class="col-lg-2">
+            @Html.Label("Stok Yeri ('den)")
+            <div id="stockPlaceSelect" class="input-group">
+                @Html.DropDownListFor(x => x._stock, null, htmlAttributes: new { @class = "form-control", @onchange = "MatchStockPlace()" })
+            </div>
+        </div> 
+        <div class="col-lg-2">
+            @Html.Label("Stok Yeri ('e kadar)")
+            <div id="stockEndPlaceSelect" class="input-group">
+                @Html.DropDownListFor(x => x._endStockPlace, null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="input-group">
+                <input id="btnAppMatGet" type="submit" name="btnGetValues" value="GETİR" class="btn btn-block" />
+            </div>
+        </div>
+    </div>
+
+}
+
+<div id="fillMaterials">
+    @* dönen _PartialListApproveMaterial partial view ü ajax ın success inde buraya gömülür.*@
+</div>

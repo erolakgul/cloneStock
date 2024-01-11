@@ -1,0 +1,79 @@
+﻿@model ICollection<StockHaus.ModelClass.AdminPage.UserModel>
+
+@{
+    var count = 0;
+    
+    foreach (var item in Model)
+    {
+        count = count + 1;
+        string cls = "peruser" + count;
+        
+        <tr style="height:49px;">
+            <td>@item._name</td>
+            <td> 
+                 @{
+                     
+        if (item._status > 0)
+        {
+            <img class="@cls" src="~/Img/online.png" />
+        }
+        else
+        {
+            <img class="@cls" src="~/Img/offline.png" />
+        }
+} 
+            
+            </td>
+            <td><input class="checkbox passive" type="checkbox" name="passive" style="margin-left: 50%;" value="@item._name"/></td>
+        </tr>
+    }
+}
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $("input.passive").click(function () {
+            var _username = $(this).val();
+
+            swal({
+                title: "Emin misiniz?",
+                text: "Personel Sistemden Atılsın Mı ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Evet!",
+                cancelButtonText: "Hayır!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+    function (isConfirm) {
+        if (isConfirm) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Panel/LogOffOtherUser/",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                data: "{ id: '" + _username + "'}",
+                success: function (result) {
+                    swal("", "Personel Sistemden Atıldı..", "success");
+                    checkStatusOfPersonel();
+                },
+                error: function (jqXHR, exception) {
+                    console.log(jqXHR);
+                }
+            });
+          
+        } else {
+            swal("İptal Edildi", "", "error");
+            checkStatusOfPersonel();
+        }
+    });
+
+        });
+
+    });
+</script>

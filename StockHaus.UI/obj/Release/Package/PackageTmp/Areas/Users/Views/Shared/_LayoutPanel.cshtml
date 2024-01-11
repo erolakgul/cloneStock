@@ -1,0 +1,105 @@
+﻿@using System.Web.Optimization
+@using StockHaus.Core.BaseService
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="/logo.ico" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+
+    @Styles.Render("~/Areas/Admin/Content/css")
+    @Styles.Render("~/bundles/jquery")
+
+    <link rel="scripts" href=" http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js" />
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    <link href="~/Areas/Users/Content/user_site.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+
+    <script src="~/Areas/Users/Users_site.js"></script>
+    <script src="~/Scripts/Sweet/sweetalert-dev.js"></script>
+</head>
+<body>
+    <nav id="main" class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header" >
+
+                <div id="item-header">
+                    <a class="navbar-brand" href="#"><img class="img-responsive" src="~/Img/logoP.png" /></a>
+                </div>
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+
+                    @{
+                        ServicePoints point = new ServicePoints();
+
+                        string _mail = Session["Email"].ToString(); // HttpContext.Current.Session.SessionID; //
+
+                        bool IsCanSign = point.UserService.IsCanSignPersonel(_mail);
+
+                        if (IsCanSign)
+                        {
+                            // imzalama yetkisi verildiyse imzalayabilsin
+                            <li><input id="btnDocumentSign" type="submit" onclick="IsSign()" name="btnDocumentSign" value="SAYIM BELGESİNİ İMZALA" class="btn btn-success" /></li>
+                        }
+
+                    }
+
+                    <li class="dropdown">
+                        <a id="user" href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top:10px;">
+                            <span style="font-weight:bold;font-size:16px;font-family:'Myriad Pro';" id="userNamed">@Session["Email"].ToString()</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dm_Menu">
+
+                            @{
+
+                                string email = Session["Email"].ToString();
+                                StockHaus.ModelClass.UserPage.TeamGroup name = point.UserService.GetTeamAndGroup(email);
+
+
+                                if (name._team != 3)
+                                {
+                                    <li>
+                                        <a href="#" id="dtbs" data-toggle="modal" data-target="#myModalHorizontal"><img src="~/Img//addDatabase.png" style="width:15%;margin-left:3%;" /> Malzeme Ekle</a>
+                                    </li>
+                                }
+
+                            }
+
+                            <li>
+                                <a href="/Users/Panel/SignOut"><i class="fa fa-fw fa-power-off"></i> Çıkış Yap</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="userContent" class="container-fluid" style="margin-top:60px;">
+        <div class="row" id="">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>

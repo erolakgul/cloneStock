@@ -1,0 +1,35 @@
+﻿@model StockHaus.ModelClass.AdminPage.DefineUser
+
+@using (Html.BeginForm("DefinePersonel", "Add", new { @class = "form-group" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-lg-4">
+
+    </div>
+    <div id="groupselect" class="col-lg-8">
+        <div class="col-lg-6">
+            @Html.Label("İsim Soyisim")
+            <div id="aktifDepo" class="input-group">
+                @Html.TextBoxFor(x => x._name, new { @class = "form-control", @placeholder = "Erol Akgül / Ersin Can gibi", @type = "text" })  @*, @readonly = "false"*@
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="aktifStokYeri" class="input-group">
+                @Html.Label("Kullanıcı Adı Tanımla")
+                @Html.TextBoxFor(x => x._email, new { @class = "form-control", @placeholder = "EAKGUL / ECAN gibi", @type = "text", @onkeyup = "ApproveStockPlace()" }) @*, @readonly = "true" çıkarıldı *@
+            </div>
+        </div>
+        <div class="col-lg-6">
+            @Html.Label("Şifre Tanımla")
+            <div id="matCode" class="input-group" style="margin-top:5px;">
+                @Html.TextBoxFor(x => x._password, new { @class = "form-control", @placeholder = "******", @type = "text", @id = "materialNumber", @onkeyup = "GetMaterialCode()" })
+            </div>
+        </div><br />
+        <br />
+        <div class="col-lg-12" style=" margin-top: 27px">
+            <div class="input-group">
+                <input id="btnMaterialSave" type="submit" name="btnLogin" value="Personeli KAYDET" class="btn btn-block" />
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,450 @@
+﻿@using StockHaus.Core.BaseService
+@model ICollection<StockHaus.ModelClass.AreaController.InventResult>
+
+<div class="row">
+    <div class="col-lg-3">
+        <h4><pre>Toplam Onaylanan Kalem   :     <span id="penMaterialCount"></span></pre></h4>
+        @*<h4><pre>Toplam Onaylanan Malzeme :     <span id="totalMaterialCount"></span></pre></h4>*@
+    </div>
+    <div class="col-lg-3 col-lg-offset-4">
+        <input id="appMat" type="button" onclick="" value="Onayla" />
+    </div>
+    <div class="col-lg-1">
+        <input id="assginMission" type="button" name="assginMission" value="Görevlendir" />
+    </div>
+</div>
+
+<table id="getListOfMaterial" class="table table-hover table-bordered" style="margin-top:32px;">
+    <thead style="background-color:gray !important;color:white;">
+        <tr>
+            @*<th>SAYIM KODU</th>*@
+            <th style="width:150px;">MALZEME</th>
+            <th>Indis</th>
+            <th style="width:500px;">İSİM</th>
+            <th>SERİNO</th>
+            <th>S1</th>
+            <th>S2</th>
+            <th>S3</th>
+            <th style="width:60px;">SİSTEM</th>
+            <th style="width:50px;">##</th>
+            @*<th>ZAMAN</th>*@
+            @*<th id="btnOnayla" style="background-color:white;"><input type="button" onclick="getCheckedCheckboxesFor('inventoryCheck');" value="Onayla" style="background-color:white;color:brown;font-size:18px; font-weight:bold;border:groove;border-color:brown;" /></th>*@
+            <th style="width:6%">Stok Y.</th>
+        </tr>
+    </thead>
+    <tbody id="showListMaterial">
+        @{
+            ServicePoints point = new ServicePoints();
+
+            int totalCount = Model.Count;
+            int _compareName = 0;
+
+            foreach (var item in Model)
+            {
+                _compareName = _compareName + 1;
+                string _df = "MAT" + _compareName;
+
+                string _varMı = point.MaterialService.IsMission(item.MatCode, item.MatIndex, item._matSpecStock, item._matSerNo, item.MatSection, item.MatSectionPlace);
+                bool _AGRUBUMU = point.GroupOfMaterialService.IsAgroup(item.MatCode);
+                var _quan = point.MaterialService.WhatIsCount(item.MatCode, item.MatIndex, item._matSpecStock, item._matSerNo, item.MatSection, item.MatSectionPlace);
+
+                if (_AGRUBUMU)
+                {
+                    <tr id="@_df" class="@_varMı" style="background-color:pink;">
+
+                        <td>@item.MatCode</td>
+                        <td>@item.MatIndex</td>
+                        <td>@item._matName</td>
+                        <td>@item._matSerNo</td>
+
+                        @if (item._S1 != 0)
+                        {
+                            <td>@item._S1 <input class="radio app" type="radio" name="@_df" value="@item._S1ID" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (item._S2 != 0)
+                        {
+                            <td>@item._S2 <input class="radio app" type="radio" name="@_df" value="@item._S2ID" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item._S3 != 0)
+                        {
+                            <td>@item._S3 <input class="radio app" type="radio" name="@_df" value="@item._S3ID" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        <td>@_quan</td>
+
+                        <td><input class="radio mission" type="radio" name="@_df" style="margin-left:37%;" /></td>
+                        <td>@item.MatSectionPlace</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr id="@_df" class="@_varMı">
+
+                        <td>@item.MatCode</td>
+                        <td>@item.MatIndex</td>
+                        <td>@item._matName</td>
+                        <td>@item._matSerNo</td>
+
+
+                        @if (item._S1 != 0)
+                        {
+                            <td>@item._S1 <input class="radio app" type="radio" name="@_df" value="@item._S1ID" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item._S2 != 0)
+                        {
+                            <td>@item._S2 <input class="radio app" type="radio" name="@_df" value="@item._S2ID" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item._S3 != 0)
+                        {
+                            <td>@item._S3 <input class="radio app" type="radio" name="@_df" value="@item._S3ID" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        <td>@_quan</td>
+                        <td><input class="radio mission" type="radio" name="@_df" style="margin-left:37%;" /></td>
+                        <td>@item.MatSectionPlace</td>
+                    </tr>
+                }
+            }
+
+        }
+    </tbody>
+</table>
+
+
+<script>
+    $(document).ready(function () {
+
+        $(".listPop").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#getListOfMaterial").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        // onaylama mekanizmasında radio buton seçimine göre ONAYLA veya Görevlendir butonu kontrolü
+        $(".app").click(function () {
+            $("#assginMission").hide();
+            $("#appMat").show();
+
+            $(".mission").each(function () {
+                //$(this).checked = false;
+                $(this).prop('checked', false);
+            });
+
+        });
+        $(".mission").click(function () {
+            $("#assginMission").show();
+            $("#appMat").hide();
+
+            $(".app").each(function () {
+                //$(this).checked = false;
+                $(this).prop('checked', false);
+            });
+        });
+
+        $('#showListMaterial > tr').each(function (i, row) {
+            //console.log("bedava :" + $(this).attr("class"));
+
+            if ($(this).attr("class") == "1") {
+                $(this).css("background-color", "darkseagreen");
+
+                var c = $(this).attr("class");
+                $("#showListMaterial > tr." + c + " > td:nth-child(5) > input").hide();
+                $("#showListMaterial > tr." + c + " > td:nth-child(6) > input").hide();
+                $("#showListMaterial > tr." + c + " > td:nth-child(9) > input").hide();
+                //console.log("ccc :" + c);
+            };
+        });
+
+        // A GRUBU MALZEME KIYAS KONTROLÜ
+        $('#showListMaterial > tr').each(function (i, row) {
+            var c2 = $(this).attr("style");
+            if (c2 === "background-color:pink;") {
+                var c = $(this).attr("class");
+                var id = $(this).attr("id");
+                var _s1 = $("#showListMaterial > tr#" + id + " > td:nth-child(5)").text().trim();
+                var _s2 = $("#showListMaterial > tr#" + id + " > td:nth-child(6)").text().trim();
+                var _sistem = $("#showListMaterial > tr#" + id + " > td:nth-child(8)").text().trim();
+
+                if (_s1 != _s2 || _s1 != _sistem || _s2 != _sistem) {
+                    console.log("s1 :" + _s1 + "//" + _s2 + "//" + _sistem);
+                    $("#showListMaterial > tr#" + id + " > td:nth-child(5) > input").hide();
+                    $("#showListMaterial > tr#" + id + " > td:nth-child(6) > input").hide();
+                };
+            };
+        });
+
+        countOfTotalMaterial();
+
+        var aa = null;
+        var bb = null;
+        var _Xc = 0;
+
+        $('#showListMaterial > tr').each(function (i) {
+            $("td", this).each(function (j) {
+                //console.log("ii :" + i + "// jj :" + j);
+                //if (i > 0) {
+                switch (j) {
+                    case 4:
+                        aa = $(this).text().trim();
+                        break;
+                    case 5:
+                        bb = $(this).text().trim();
+                        break;
+                };
+
+                if (j == 4 || j == 5) {
+                    _Xc = _Xc + 1;
+                    if (_Xc == 2) {
+                        //console.log("aa :" + aa + "// bb :" + bb);
+                        _Xc = 0;
+
+                        if (aa != bb) {
+                            var _f = 0;
+                            _f = i + 1;
+                            $('tbody#showListMaterial > tr:nth-child(' + _f + ') > td:nth-child(7)').css("background-color", "gray");
+
+                            //console.log("ii :" + i + "// jj :" + j + "// f:" + _f);
+                        }
+                    }
+
+                };
+                //}
+            });
+        });
+
+    });
+
+    function countOfTotalMaterial() {
+
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Trace/calcInventMaterial/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            cache: false,
+            //data: JSON.stringify(_collect),//"{ storeNo: '" + id + "'}",
+            success: function (result) {
+
+                var _d = result.split('#');
+                $("#penMaterialCount").text(_d[0]);
+                $("#totalMaterialCount").text(_d[1]);
+
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                console.log(jqXHR);
+            }
+        });
+    };
+
+
+    // malzeme onaylama
+    $("#appMat").click(function () {
+        var _depo = $("#stockStoreSelect > select > option:selected").text();
+        var _stokYeri = $("#stockPlaceSelect > select > option:selected").text();
+
+        // malzeme kodu indisi seri no su ve sayım tablosundaki ID bilgisi alınmalı
+        // alınan ID bilgisi İLE takım no suna ulaşılır,buna göre onaylananın ISAPPROVED u 1 olacak,
+        // onaylanmayan malzemelerin isactive durumu ise 0 olacak
+        localStorage.setItem("_ware", _depo);
+        localStorage.setItem("_stock", _stokYeri);
+
+        var _collect = {
+            "_matList": [],
+            "_ware": _depo,
+            "_stockPlace": _stokYeri
+        };
+
+        $("input.app:checked").each(function () {
+            var _trId = $(this).attr("name");
+
+            var _matcode = $("#showListMaterial > tr#" + _trId + " > td:nth-child(1)").text();
+            var _indis = $("#showListMaterial > tr#" + _trId + " > td:nth-child(2)").text();
+            var _serno = $("#showListMaterial > tr#" + _trId + " > td:nth-child(4)").text();
+            var _inventid = $(this).val();
+
+            _collect._matList.push({ "_matCode": _matcode, "_matIndis": _indis, "_serNo": _serno, "_inventId": _inventid });
+        });
+
+
+        localStorage.setItem("selected", JSON.stringify(_collect));
+
+        swal({
+            title: "Emin misiniz?",
+            text: "Malzeme Sayımları Onaylanacak!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Onayla!",
+            cancelButtonText: "Vazgeç!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+   function (isConfirm) {
+       if (isConfirm) {
+
+           $.ajax({
+               type: "POST",
+               url: "/Admin/Trace/ApproveInventMaterial/",
+               contentType: "application/json; charset=utf-8",
+               dataType: "json",
+               cache: false,
+               data: JSON.stringify(_collect),//"{ storeNo: '" + id + "'}",
+               success: function (result) {
+
+                   if (result == "true") {
+                       swal({
+                           title: "",
+                           text: "Malzemeler Onaylandı",
+                           type: "success"
+                       },
+                      function () {
+                          wareApprovePage();
+                      });
+                   } else if (result == "true") {
+                       swal("", "Güncellemeler Yapılamadı.", "waning");
+                   };
+
+               },
+               error: function (jqXHR, exception) {
+                   var msg = '';
+                   if (jqXHR.status === 0) {
+                       msg = 'Not connect.\n Verify Network.';
+                   } else if (jqXHR.status == 404) {
+                       msg = 'Requested page not found. [404]';
+                   } else if (jqXHR.status == 500) {
+                       msg = 'Internal Server Error [500].';
+                   } else if (exception === 'parsererror') {
+                       msg = 'Requested JSON parse failed.';
+                   } else if (exception === 'timeout') {
+                       msg = 'Time out error.';
+                   } else if (exception === 'abort') {
+                       msg = 'Ajax request aborted.';
+                   } else {
+                       msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                   }
+                   //alert(msg);
+                   console.log(jqXHR);
+               }
+           });
+       } else {
+           swal("", "vazgeçildi", "warning");
+       }
+   });
+
+
+    });
+
+    // 3. takımın sayacağı kalemleri belirleme
+    $("#assginMission").click(function () {
+        var _depo = $("#stockStoreSelect > select > option:selected").text();
+        var _stokYeri = $("#stockPlaceSelect > select > option:selected").text();
+
+        var _collect = {
+            "_matList": [],
+            "_ware": _depo,
+            "_stockPlace": _stokYeri
+        };
+        localStorage.setItem("_appStore", _depo);
+        localStorage.setItem("_appStorePlace", _stokYeri);
+
+        $("input.mission:checked").each(function () {
+            var _trId = $(this).attr("name");
+            var _inventIdX = "";
+            var _matcode = $("#showListMaterial > tr#" + _trId + " > td:nth-child(1)").text();
+            var _indis = $("#showListMaterial > tr#" + _trId + " > td:nth-child(2)").text();
+            var _serno = $("#showListMaterial > tr#" + _trId + " > td:nth-child(4)").text();
+
+            _collect._matList.push({ "_inventId": _inventIdX, "_matCode": _matcode, "_matIndis": _indis, "_serNo": _serno });
+
+        });
+        //console.log("ddd :"+ _depo + "//" + _stokYeri);
+
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Trace/AssignAndPassiveMaterial/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            cache: false,
+            data: JSON.stringify(_collect),//"{ storeNo: '" + id + "'}",
+            success: function (result) {
+
+                if (result == "success") {
+                    swal("", "3.takıma atama yapıldı.", "success");
+                } else if (result == "false") {
+                    swal("", "Atama işlemi başarısız oldu", "error");
+                    return false;
+                };
+
+                var _depo2 = localStorage.getItem("_appStore");
+                var _stokYeri2 = localStorage.getItem("_appStorePlace");
+
+                var _cllct = { "_ware": _depo2, "_stock": _stokYeri2 };
+
+                //////
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Trace/GetListMaterial/",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    cache: false,
+                    data: JSON.stringify(_cllct),
+                    success: function (result) {
+                        $("#fillMaterials").html(result);
+                    }
+                });
+                //////
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                //alert(msg);
+                console.log(jqXHR);
+            }
+        });
+
+    });
+</script>

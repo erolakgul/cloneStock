@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Stock HAUS - Veri Ekleme";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdd.cshtml";
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tab">
+                <button class="tablinks" onclick="openTop(event, 'storeDefinePage',1)">DEPO / STOKYERİ EKLEME</button>
+                <button class="tablinks" onclick="openTop(event, 'addMatX',2)">MALZEME EKLEME</button>
+                <button class="tablinks" onclick="openTop(event, 'perAddX',3)">PERSONEL EKLEME</button>
+            </div>
+
+            <div id="storeDefinePage" class="col-lg-12 tabcontent">
+                @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("_PartialDefineStockPlace")*@
+                <div id="defineStockWare">
+
+                </div>
+                <span id="DefStockResult" style="display:none">@ViewBag.DefStock</span> 
+            </div>
+
+            <div id="addMatX" class="col-lg-12 tabcontent">
+                @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("_PartialDefineMaterial")*@
+                <span id="DefMatResult" style="display:none">@ViewBag.DefMat</span> 
+            </div>
+
+            <div id="perAddX" class="col-lg-12 tabcontent">
+                @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("_PartialDefinePersonel")*@
+                <span id="DefPerResult" style="display:none">@ViewBag.DefPer</span> 
+                <div id="dfnPrsnl">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var def = $("#DefStockResult").text();
+
+        if (def == "True") {
+            swal("Başarılı!", "Depo / StokYeri Kaydedildi", "success");
+        } else if (def == "False") {
+            swal("Başarısız!", "Depo / StokYeri Kaydedilemedi", "warning");
+        } else if (def == "Empty") {
+            swal("Başarısız!", "Boş veri var! Depo / StokYeri Kaydedilemedi", "warning");
+        }
+
+        var defMat = $("#DefMatResult").text();
+        if (defMat == "True") {
+            swal("Başarılı!", "Malzeme Kaydedildi", "success");
+        } else if (defMat == "TipFalse") {
+            swal("Başarısız!", "Malzeme Sayım Tipi Verisi Yüzünden Kaydedilemedi", "warning");
+        } else if (defMat == "Warning") {
+            swal("Başarısız!", "Malzeme o depoda kayıtlı, Kaydedilemedi", "warning");
+        } else if (defMat == "Empty") {
+            swal("Başarısız!", "Boş veriler var, Kaydedilemedi", "warning");
+        }
+
+        var defPer = $("#DefPerResult").text();
+        if (defPer == "Success") {
+            swal("Başarılı!", "Personel Kaydedildi", "success");
+        } else if (defPer == "False") {
+            swal("Başarısız!", "Personel Kaydedilemedi", "warning");
+        } else if (defPer == "Empty") {
+            swal("Başarısız!", "Boş veri var, Kaydedilemedi", "warning");
+        } else if (defPer == "MailFalse") {
+            swal("Başarısız!", "Mail Formatı Uygun Değil, Kaydedilemedi", "warning");
+        }
+
+
+        $("#addaddStockPlace").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#addStockPlace").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        $("#addaddMaterial").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#addMaterial").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+
+        $("#addaddPersonel").bind("click", function (e) {  // 1
+            var t = $(this); $("html, body").stop().animate(
+                                                             { scrollTop: $("#addPersonel").offset().top - 10 }
+                                                             , 1e3),
+            e.preventDefault();
+        });
+    });
+
+    function openTop(evt, cityName, no) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+        if (no == 1) {
+            dfnWS();
+        } else if (no == 2) {
+            //window.location.href = "/Users/Trace";
+            //showPercentResult();
+        } else if (no == 3) {
+            //aProdResultTrace();
+            dfnPrsnl();
+        }
+    }
+</script>

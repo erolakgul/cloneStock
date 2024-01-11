@@ -1,0 +1,86 @@
+﻿@using StockHaus.Core.BaseService
+@using PagedList
+@using PagedList.Mvc
+@model IPagedList<StockHaus.ModelClass.AdminPage.InventoriesModel>
+
+<div class="pagedList" style="float:right;">
+    @{
+        @Html.PagedListPager(Model, id => Url.Action("InventApprovedMat", new { id = id }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "rsltApprovedMat" })) //, OnBegin = "waiting()"
+    }
+</div>
+
+<table class="table table-hover table-bordered" style="margin-top:20px;">
+    <thead style="background-color:rgba(20, 60, 107, 0.84) !important">
+        <tr style="color:white;">
+            <th>SAYIM KODU</th>
+            <th>SAYAN TAKIM</th>
+            <th>MALZEME-INDIS</th>
+            <th>SERİNO</th>
+            <th>Ö. STOK</th>
+            <th>İSMİ</th>
+            <th>ADET</th>
+            <th>DEPO</th>
+            <th>S. YERİ</th>
+            <th>ONAYLAYAN</th>
+            <th>ZAMAN</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+    ServicePoints point = new ServicePoints();
+
+            if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    int _cT = 0;
+                    <tr>
+                        <td>@item.InventoryCode</td>
+
+                        @{
+                    string _sayanTakım = "";
+
+
+                    string[] _inList = item.InventoryCode.Split('X');
+
+                    string _countInv = _inList[0];
+                    int _team = int.Parse(_inList[1]);
+                    int _grp = int.Parse(_inList[2]);
+
+                    var _list = point.InventoryGroupService.TGList(_team, _grp); //db.InventoryGroup.Where(x => x.TeamNo == _team && x.GroupNo == _grp && x.IsActive).ToList();
+
+                    foreach (var itemx in _list)
+                    {
+                        if (_cT < 2)
+                        {
+
+                            if (_sayanTakım == "")
+                            {
+                                _cT = _cT + 1;
+                                _sayanTakım = itemx.PerName;
+                            }
+                            else
+                            {
+                                _cT = _cT + 1;
+                                _sayanTakım = _sayanTakım + " - " + itemx.PerName;
+                            }
+                        }
+                    }
+
+                        }
+                        <td>@_sayanTakım</td>
+                        <td>@item.MatCode - @item.MatIndex</td>
+                        <td>@item.MatSerialNumber</td>
+                        <td>@item.MatSpecialStock</td>
+                        <td>@item.MatName</td>
+                        <td>@item.MatQuantity</td>
+                        <td>@item.MatSection</td>
+                        <td>@item.MatSectionPlace</td>
+                        <td>@item.ApprovedPers</td>
+                        <td>@item.ApprovedDate</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>

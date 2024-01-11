@@ -1,0 +1,61 @@
+﻿@model StockHaus.ModelClass.AdminPage.AssignTasks
+
+@using (Html.BeginForm("AssignTask", "Panel", new { @class = "form-group" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-lg-4">
+        @Html.Label("Ekip Seç")
+        <div id="teamselect2" class="input-group">
+            @Html.DropDownListFor(x => x._teamNo, null, htmlAttributes: new { @class = "form-control", @onchange = "FillText()" })
+        </div>
+        <br />
+        @Html.Label("Grup Seç")
+        <div id="groupsel2" class="input-group">
+            @Html.DropDownListFor(x => x._groupNoL, null, htmlAttributes: new { @class = "form-control", @onchange = "FillText()" })
+        </div>
+    </div>
+    <div id="groupselect" class="col-lg-4">
+        @Html.Label("Depo ve Stok Yeri Seç")
+        <div id="perNameOne" class="input-group">
+            @Html.TextBoxFor(x => x._perName, new { @class = "form-control", @placeholder = "PERSONEL", @type = "text", @readonly = "true" })
+        </div>
+        <br /><br />
+        <div id="perNameTwo" class="input-group">
+            @Html.TextBoxFor(x => x._perName2, new { @class = "form-control", @placeholder = "PERSONEL", @type = "text", @readonly = "true" })
+        </div><br />
+        @Html.Label("Depo")
+        <div id="stockStoreSelect" class="input-group">
+            @Html.DropDownListFor(x => x._stockStore, null, htmlAttributes: new { @class = "form-control", @onchange = "FillStockPlace()" })
+        </div>
+        <br />
+        <div class="col-lg-6">
+            @Html.Label("Stok Yeri (- den)")
+            <div id="stockPlaceSelect" class="input-group">
+                @Html.DropDownListFor(x => x._stockPlace, null, htmlAttributes: new { @class = "form-control", @onchange = "matchMatSection()" })
+            </div>
+        </div>
+        <div class="col-lg-6">
+            @Html.Label("Stok Yeri (- e kadar)")
+            <div id="stockPlaceEndSelect" class="input-group">
+                @Html.DropDownListFor(x => x._endStockPlace, null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="input-group">
+            <input id="btnLogin" type="submit" name="btnLogin" value="ATA" class="btn btn-block" />
+        </div>
+        <span id="assignResult" style="display:none;">@ViewBag.Atama</span>
+    </div>
+}
+
+@* Ekipteki takımların görevli olduğu diğer depo / stok yerleri *@
+<div class="col-lg-3 col-lg-offset-1">
+    <div class="text-center"> @Html.Label("Ekibin Görevli Olduğu Diğer Yerler")</div>
+    <table class="table table-responsive table-bordered">
+        <thead><tr style="background-color: rgba(0,0,0,0.5)"><th>Depo</th><th>Stok Yeri(S)</th><th>Stok Yeri(F)</th></tr></thead>
+        <tbody id="missionPlace">
+            
+        </tbody>
+    </table>
+    <span id="userNamedMission" style="display:none;"></span>
+</div>
